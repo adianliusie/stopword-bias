@@ -1,2 +1,2 @@
-# shortcutlearningNLP
-Discovering and eliminating shortcut learning in NLP tasks
+# Objective
+Discovering and eliminating shortcut learning in NLP tasks.
