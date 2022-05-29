@@ -26,6 +26,7 @@ def perplexity(sentence:str, tokenizer, model, stride:int=512) -> float:
 def perplexity_all(sentences):
     tokenizer = GPT2TokenizerFast.from_pretrained('distilgpt2')
     model = GPT2LMHeadModel.from_pretrained('distilgpt2')
+    model.eval()
     ppls = [perplexity(s, tokenizer, model) for s in sentences]
     ppls = [p if (p<5000 and type(p)==float) else 5000 for p in ppls]
     return ppls
