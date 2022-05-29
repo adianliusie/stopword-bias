@@ -1,4 +1,5 @@
 from collections import defaultdict
+from utilities.perplexity import perplexity_all
 
 class FeatureExtractor():
     '''
@@ -12,6 +13,9 @@ class FeatureExtractor():
     
     def num_chars(self):
         return [len(s) for s in self.sentences]
+    
+    def perplexity(self):
+        return perplexity_all(self.sentences)
 
 
 
