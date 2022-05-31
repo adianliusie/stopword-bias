@@ -43,7 +43,7 @@ class RetentionGenerator(FeatureExtractor):
         cum_count = defaultdict(int)
 
         for i, y in enumerate(ordered_ys):
-            for c in num_classes:
+            for c in range(num_classes):
                 if y==c:
                     cum_count[c] += 1
                 pos_class_fracs[c].append(cum_count[c]/(i+1))
