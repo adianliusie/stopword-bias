@@ -2,6 +2,9 @@
 Plot label/prediction (or both) retention plots per class
 '''
 
+import subprocess
+subprocess.run(['export PYTHONPATH=/path/to/parent'])
+
 import argparse
 import os
 import sys
@@ -9,8 +12,7 @@ import matplotlib.pyplot as plt
 from data.dataloader import load_data
 from feature_extractor import RetentionGenerator
 
-import subprocess
-subprocess.run(['export PYTHONPATH=/path/to/parent'])
+
 
 if __name__ == '__main__':
 
