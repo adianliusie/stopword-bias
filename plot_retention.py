@@ -52,9 +52,11 @@ if __name__ == '__main__':
         plt.plot(fracs, pos_fracs, label=f'class {class_ind}')
         plt.ylabel(f'Class {class_ind} Fraction')
         plt.xlabel(f'Retention Fraction')
-        out_file = f'{args.OUT}/feature_{args.FEAT}_class_{class_ind}.png'
-    plt.legend()
-    plt.savefig(out_file, bbox_inches='tight')
+        # out_file = f'{args.OUT}/feature_{args.FEAT}_class_{class_ind}.png'
         # plt.clf()
+    plt.legend()
+    out_file = f'{args.OUT}/data_{args.DATANAME}_feature_{args.FEAT}.png'
+    plt.savefig(out_file, bbox_inches='tight')
+        
 
     
