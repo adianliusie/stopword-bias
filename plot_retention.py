@@ -6,7 +6,7 @@ import argparse
 import os
 import sys
 import matplotlib.pyplot as plt
-from .data.dataloader import load_data
+from data.dataloader import load_data
 from feature_extractor import RetentionGenerator
 
 

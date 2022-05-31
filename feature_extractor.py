@@ -1,5 +1,5 @@
 from collections import defaultdict
-from .utilities.perplexity import perplexity_all
+from utilities.perplexity import perplexity_all
 
 class FeatureExtractor():
     '''
