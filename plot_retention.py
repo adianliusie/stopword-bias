@@ -2,8 +2,8 @@
 Plot label/prediction (or both) retention plots per class
 '''
 
-import subprocess
-subprocess.run(['export PYTHONPATH=/path/to/parent'])
+# import subprocess
+# subprocess.run(['export PYTHONPATH=/path/to/parent'])
 
 import argparse
 import os
