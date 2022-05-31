@@ -5,7 +5,7 @@ Plot label/prediction (or both) retention plots per class
 import argparse
 import os
 import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), "lib"))
+os.system('export PYTHONPATH=/path/to/parent')
 
 import matplotlib.pyplot as plt
 from data.dataloader import load_data
