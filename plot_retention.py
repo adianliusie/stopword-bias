@@ -3,6 +3,7 @@ Plot label/prediction (or both) retention plots per class
 '''
 
 import argparse
+from cProfile import label
 import os
 import sys
 import matplotlib.pyplot as plt
@@ -20,6 +21,7 @@ if __name__ == '__main__':
     commandLineParser.add_argument('OUT', type=str, help='Directory to save output figures')
     commandLineParser.add_argument('--data_path', type=str, default='none', help='data filepath')
     commandLineParser.add_argument('--data_type', type=str, default='none', help='e.g. train or test')
+    commandLineParser.add_argument('--ignore', type=int, default=0, help='num initial points to not plot')
     args = commandLineParser.parse_args()
 
     # Save the command run
@@ -47,11 +49,12 @@ if __name__ == '__main__':
 
     # Plot
     for class_ind, pos_fracs in pos_class_fracs.items():
-        plt.plot(fracs, pos_fracs)
+        plt.plot(fracs, pos_fracs, label=f'class {class_ind}')
         plt.ylabel(f'Class {class_ind} Fraction')
         plt.xlabel(f'Retention Fraction')
         out_file = f'{args.OUT}/feature_{args.FEAT}_class_{class_ind}.png'
-        plt.savefig(out_file, bbox_inches='tight')
-        plt.clf()
+    plt.legend()
+    plt.savefig(out_file, bbox_inches='tight')
+        # plt.clf()
 
     
