@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 from data.dataloader import load_data
 from feature_extractor import RetentionGenerator
 
-import subprocess
-subprocess.run(['export PYTHONPATH=/path/to/parent'])
+# import subprocess
+# subprocess.run(['export PYTHONPATH=/path/to/parent'])
 
 if __name__ == '__main__':
 
