@@ -47,7 +47,7 @@ if __name__ == '__main__':
 
     # Plot
     for class_ind, pos_fracs in pos_class_fracs.items():
-        plt.plot(fracs, pos_class_fracs)
+        plt.plot(fracs, pos_fracs)
         plt.ylabel(f'Class {class_ind} Fraction')
         plt.xlabel(f'Retention Fraction')
         out_file = f'{args.OUT}/feature_{args.FEAT}_class_{class_ind}.png'
