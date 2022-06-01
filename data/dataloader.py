@@ -11,6 +11,8 @@ def load_data(dataset, filepath=None, type=None):
         dl = IMDBLoader()
         return dl.get_data(filepath)
     if dataset == 'agnews':
-        dl = AGNewsLoader(part=type)
+        dl = AGNewsLoader()
+        return dl.get_data(part=type)
     if dataset == 'dbpedia':
-        dl = DBpediaLoader(part=type)
+        dl = DBpediaLoader()
+        return dl.get_data(part=type)
