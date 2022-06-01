@@ -23,7 +23,7 @@ import scandir
 
 class IMDBLoader():
 
-  def _get_reviews(dir):
+  def _get_reviews(self, dir):
     review_files = [f.name for f in scandir.scandir(dir)]
     review_list = []
     for review_file in review_files:
