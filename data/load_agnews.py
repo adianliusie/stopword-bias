@@ -4,7 +4,7 @@ class AGNewsLoader():
     def __init__(self):
         self.dataset = load_dataset('ag_news')
     
-    def _get_data(self, part='train'):
+    def get_data(self, part='train'):
         texts = self.dataset[part]['text']
         labels = self.dataset[part]['label']
 
