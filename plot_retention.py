@@ -45,6 +45,8 @@ if __name__ == '__main__':
 
     if args.FEAT == 'num_chars':
         feats = RG.num_chars()
+    if args.FEAT == 'num_words':
+        feats = RG.num_words()
     fracs, pos_class_fracs = RG.retention_plot(feats)
 
     # Plot
