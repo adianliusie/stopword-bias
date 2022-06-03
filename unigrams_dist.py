@@ -21,34 +21,42 @@ for ex in train:
 
 positive_text = ' '.join(pos_examples)
 negative_text = ' '.join(neg_examples)
+positive_words = positive_text.split()
+negative_words = negative_text.split()
 
-pos_distribution = {}
+word_distribution = {}
 tot_pos = 0
 for word in positive_text:
     if word in stop_word_list:
         tot_pos += 1
-        if word in pos_distribution.keys():
-            pos_distribution[word] += 1
+        if word in word_distribution.keys():
+            word_distribution[word][0] += 1
         else:
-            pos_distribution[word] = 1
+            word_distribution[word] = (1,0)
 
-neg_distribution = {}
 tot_neg = 0
 for word in negative_text:
     if word in stop_word_list:
         tot_neg += 1
-        if word in neg_distribution.keys():
-            neg_distribution[word] += 1
+        if word in word_distribution.keys():
+            word_distribution[word][1] += 1
         else:
-            neg_distribution[word] = 1
+            word_distribution[word] = (0,1)
 
-plt.bar(pos_distribution.keys(), np.asarray(list(pos_distribution.values()))/tot_pos)
+stp_words = word_distribution.keys()
+pos_counts = []
+neg_counts = []
+for w in stp_words:
+    pos_counts.append(word_distribution[w][0])
+    neg_counts.append(word_distribution[word][1])
+
+plt.bar(stp_words, np.asarray(pos_counts)/tot_pos)
 plt.xlabel("Stop Words")
 plt.ylabel("Fraction")
 plt.savefig("pos.png")
 plt.clf()
 
-plt.bar(neg_distribution.keys(), np.asarray(list(neg_distribution.values()))/tot_neg)
+plt.bar(stp_words, np.asarray(neg_counts)/tot_neg)
 plt.xlabel("Stop Words")
 plt.ylabel("Fraction")
 plt.savefig("neg.png")
