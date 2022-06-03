@@ -47,8 +47,12 @@ stp_words = word_distribution.keys()
 pos_counts = []
 neg_counts = []
 for w in stp_words:
-    pos_counts.append(word_distribution[w][0])
-    neg_counts.append(word_distribution[word][1])
+    if w in word_distribution.keys():
+        pos_counts.append(word_distribution[w][0])
+        neg_counts.append(word_distribution[w][1])
+    else:
+        pos_counts.append(0)
+        neg_counts.append(0)
 
 plt.bar(stp_words, np.asarray(pos_counts)/tot_pos)
 plt.xlabel("Stop Words")
