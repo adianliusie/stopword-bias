@@ -20,6 +20,7 @@ if __name__ == '__main__':
     commandLineParser.add_argument('FEAT', type=str, help='e.g. num_chars')
     commandLineParser.add_argument('OUT', type=str, help='Directory to save output figures')
     commandLineParser.add_argument('--ignore', type=int, default=0, help='num initial points to not plot')
+    commandLineParser.add_argument('--class_ind', type=int, default=0, help='target class')
     args = commandLineParser.parse_args()
 
     # Save the command run
@@ -32,23 +33,28 @@ if __name__ == '__main__':
     system = SystemLoader(args.MODEL_PATH)
 
     # Load labels and predictions
-    sentences = system.load_sentences(args.DATANAME,  mode='test')
-    preds  = system.load_preds(args.DATANAME,  mode='test')
-    labels = system.load_labels(args.DATANAME, mode='test')
+    sentences_dict = system.load_inputs(args.DATANAME,  mode='test')
+    preds_dict  = system.load_preds(args.DATANAME,  mode='test')
+    labels_dict = system.load_labels(args.DATANAME, mode='test')
 
+    sentences = [sentences_dict[i] for i in range(len(sentences_dict))]
+    preds = [preds_dict[i] for i in range(len(preds_dict))]
+    labels = [labels_dict[i] for i in range(len(labels_dict))]
 
-    # Get retention curves and plot
-    RG = RetentionGenerator(sentences, ys)
-    feats = RG.get_feat(args.FEAT)
-    fracs, pos_class_fracs = RG.retention_plot(feats)
+    # Get retention curves
+    RG_pred = RetentionGenerator(sentences, preds)
+    RG_label = RetentionGenerator(sentences, labels)
 
-    # Plot
+    feats_pred = RG_pred.get_feat(args.FEAT)
+    fracs, pos_class_fracs_pred = RG_pred.retention_plot(feats_pred)
+    feats_label = RG_label.get_feat(args.FEAT)
+    _, pos_class_fracs_label = RG_label.retention_plot(feats_label)
+
+    # Plot WORK IN PROGRESS
     for class_ind, pos_fracs in pos_class_fracs.items():
-        plt.plot(fracs[args.ignore:], pos_fracs[args.ignore:], label=f'class {class_ind}')
-        plt.ylabel(f'Class Fraction')
-        plt.xlabel(f'Retention Fraction')
-        # out_file = f'{args.OUT}/feature_{args.FEAT}_class_{class_ind}.png'
-        # plt.clf()
+    plt.plot(fracs[args.ignore:], pos_fracs[args.ignore:], label=f'class {args.class_ind}')
+    plt.ylabel(f'Class Fraction')
+    plt.xlabel(f'Retention Fraction')
     plt.legend()
     out_file = f'{args.OUT}/data_{args.DATANAME}_feature_{args.FEAT}.png'
     plt.savefig(out_file, bbox_inches='tight')
