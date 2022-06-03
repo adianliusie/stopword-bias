@@ -1,0 +1,7 @@
+framework/trained_models
+
+*/.ipynb_checkpoints/
+pynb_checkpoints/
+*.pyc
+*/__pycache__/
+__pycache__/
