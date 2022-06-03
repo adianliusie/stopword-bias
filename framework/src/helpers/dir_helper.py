@@ -107,8 +107,8 @@ class DirHelper():
     def file_exists(self, file_name:str)->bool:
         return os.path.isfile(f'{self.abs_path}/{file_name}') 
     
-    def preds_exists(self, eval_path:str)->bool:
-        eval_name = eval_path.replace('/', '.')
+    def probs_exists(self, data_name:str, mode:str)->bool:
+        eval_name = f'{data_name}_{mode}'
         pred_path = f'{self.abs_path}/preds/{eval_name}'
         return os.path.isfile(pred_path) 
 
@@ -121,9 +121,9 @@ class DirHelper():
         save_path = f'{self.abs_path}/{name}'
         save_json(data, save_path)
 
-    def save_preds(self, preds, eval_path):
+    def save_probs(self, preds, data_name, mode):
         """saves predictions directory"""
-        eval_name = eval_path.replace('/', '.')
+        eval_name = f'{data_name}_{mode}'
         pred_path = f'{self.abs_path}/preds/{eval_name}'
         
         with open(pred_path, 'wb') as handle:
@@ -146,9 +146,9 @@ class DirHelper():
     def load_dict(self, name:str)->dict:
         return load_json(f'{self.abs_path}/{name}')
     
-    def load_preds(self, eval_path:str):
+    def load_probs(self, data_name:str, mode:str):
         """saves predictions directory"""
-        eval_name = eval_path.replace('/', '.')
+        eval_name = f'{data_name}_{mode}'
         pred_path = f'{self.abs_path}/preds/{eval_name}'
         with open(pred_path, 'rb') as handle:
             predictions = pickle.load(handle)

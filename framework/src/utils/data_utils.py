@@ -8,6 +8,7 @@ from datasets import load_dataset
 def load_data(data_name:str, lim:int=None)->Tuple['train', 'dev', 'test']:
     if data_name == 'imdb':    return _load_imdb(lim)
     if data_name == 'dbpedia': return _load_dbpedia(lim)
+    if data_name == 'rt':      return _load_rotten_tomatoes(lim)
     else: raise ValueError('invalid dataset provided')
 
 def _load_imdb(lim:int=None)->List[Dict['text', 'label']]:
@@ -28,6 +29,13 @@ def _load_dbpedia(lim:int=None):
     test = [_key_to_text(ex) for ex in test]
     return train, dev, test
 
+def _load_rotten_tomatoes(lim:int=None):
+    dataset = load_dataset("rotten_tomatoes")
+    train = list(dataset['train'])[:lim]
+    dev   = list(dataset['validation'])[:lim]
+    test  = list(dataset['test'])[:lim]
+    return train, dev, test
+    
 def _create_splits(examples:list, ratio=0.8)->Tuple[list, list]:
     examples = deepcopy(examples)
     split_len = int(ratio*len(examples))
