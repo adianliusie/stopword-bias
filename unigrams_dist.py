@@ -42,13 +42,13 @@ for word in negative_text:
         else:
             neg_distribution[word] = 1
 
-plt.bar(pos_distribution.keys(), pos_distribution.values()/tot_pos)
+plt.bar(pos_distribution.keys(), list(pos_distribution.values())/tot_pos)
 plt.xlabel("Stop Words")
 plt.ylabel("Fraction")
 plt.savefig("pos.png")
 plt.clf()
 
-plt.bar(neg_distribution.keys(), neg_distribution.values()/tot_neg)
+plt.bar(neg_distribution.keys(), list(neg_distribution.values())/tot_neg)
 plt.xlabel("Stop Words")
 plt.ylabel("Fraction")
 plt.savefig("neg.png")
