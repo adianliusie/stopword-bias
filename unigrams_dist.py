@@ -1,6 +1,7 @@
 import numpy as np
 from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
+import pandas as pd
 
 from framework.src.utils.data_utils import load_data
 
@@ -54,11 +55,16 @@ for w in stp_words:
         pos_counts.append(0)
         neg_counts.append(0)
 
-plt.barh(stp_words, np.asarray(pos_counts)/tot_pos)
-plt.barh(stp_words, np.asarray(neg_counts)/tot_neg)
-plt.ylabel("Stop Words")
-plt.xlabel("Fraction")
-plt.xlim([0,0.13])
+data = {'Pos': np.asarray(pos_counts)/tot_pos, 'Neg': np.asarray(neg_counts)/tot_neg}
+df = pd.DataFrame(data,columns=['Girls','Boys'], index = stp_words)
+
+df.plot.barh()
+
+# plt.barh(stp_words, np.asarray(pos_counts)/tot_pos)
+# plt.barh(stp_words, np.asarray(neg_counts)/tot_neg)
+# plt.ylabel("Stop Words")
+# plt.xlabel("Fraction")
+# plt.xlim([0,0.13])
 plt.savefig("pos_neg.png")
 # plt.clf()
 
