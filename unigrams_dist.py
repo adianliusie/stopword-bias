@@ -26,7 +26,7 @@ negative_words = negative_text.split()
 
 word_distribution = {}
 tot_pos = 0
-for word in positive_text:
+for word in positive_words:
     if word in stop_word_list:
         tot_pos += 1
         if word in word_distribution.keys():
@@ -35,7 +35,7 @@ for word in positive_text:
             word_distribution[word] = [1,0]
 
 tot_neg = 0
-for word in negative_text:
+for word in negative_words:
     if word in stop_word_list:
         tot_neg += 1
         if word in word_distribution.keys():
@@ -43,7 +43,7 @@ for word in negative_text:
         else:
             word_distribution[word] = [0,1]
 
-stp_words = word_distribution.keys()
+stp_words = stop_word_list
 pos_counts = []
 neg_counts = []
 for w in stp_words:
