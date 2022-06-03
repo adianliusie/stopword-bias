@@ -7,6 +7,14 @@ class FeatureExtractor():
     '''
     def __init__(self, sentences):
         self.sentences = sentences
+    
+    def get_feat(self, feat_name='num_words'):
+        if feat_name == 'num_words':
+            return self.num_words()
+        if feat_name == 'num_chars':
+            return self.num_chars()
+        if feat_name == 'perplexity':
+            return self.perplexity()
 
     def num_words(self):
         return [len(s.split()) for s in self.sentences]
