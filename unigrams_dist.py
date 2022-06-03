@@ -60,9 +60,10 @@ plt.xlabel("Fraction")
 plt.savefig("pos.png")
 plt.clf()
 
-plt.bar(stp_words, np.asarray(neg_counts)/tot_neg)
+plt.barh(stp_words, np.asarray(neg_counts)/tot_neg)
 plt.xlabel("Stop Words")
 plt.ylabel("Fraction")
+plt.xlim([0,0.13])
 plt.savefig("neg.png")
 plt.clf()
 
