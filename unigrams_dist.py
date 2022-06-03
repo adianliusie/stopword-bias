@@ -54,9 +54,9 @@ for w in stp_words:
         pos_counts.append(0)
         neg_counts.append(0)
 
-plt.bar(stp_words, np.asarray(pos_counts)/tot_pos)
-plt.xlabel("Stop Words")
-plt.ylabel("Fraction")
+plt.barh(stp_words, np.asarray(pos_counts)/tot_pos)
+plt.ylabel("Stop Words")
+plt.xlabel("Fraction")
 plt.savefig("pos.png")
 plt.clf()
 
