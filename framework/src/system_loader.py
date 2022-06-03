@@ -9,7 +9,7 @@ from .helpers import DirHelper
 
 class SystemLoader(Trainer):
     """Base loader class- the inherited class inherits
-       the Trainerso has all experiment methods"""
+       the Trainer so has all experiment methods"""
 
     def __init__(self, exp_path:str):
         self.dir = DirHelper.load_dir(exp_path)
@@ -77,3 +77,12 @@ class SystemLoader(Trainer):
         for k, ex in enumerate(eval_data):
             labels_dict[k] = ex['label']
         return labels_dict
+
+    def load_inputs(self, data_name, mode='test'):
+        split_index = {'train':0, 'dev':1, 'test':2}
+        eval_data = load_data(data_name)[split_index[mode]]
+        
+        inputs_dict = {}
+        for k, ex in enumerate(eval_data):
+            inputs_dict[k] = ex['text']
+        return inputs_dict
