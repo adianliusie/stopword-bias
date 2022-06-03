@@ -55,17 +55,19 @@ for w in stp_words:
         neg_counts.append(0)
 
 plt.barh(stp_words, np.asarray(pos_counts)/tot_pos)
+plt.barh(stp_words, np.asarray(neg_counts)/tot_neg)
 plt.ylabel("Stop Words")
 plt.xlabel("Fraction")
-plt.savefig("pos.png")
-plt.clf()
-
-plt.barh(stp_words, np.asarray(neg_counts)/tot_neg)
-plt.xlabel("Stop Words")
-plt.ylabel("Fraction")
 plt.xlim([0,0.13])
-plt.savefig("neg.png")
-plt.clf()
+plt.savefig("pos_neg.png")
+# plt.clf()
+
+
+# plt.xlabel("Stop Words")
+# plt.ylabel("Fraction")
+
+# plt.savefig("neg.png")
+# plt.clf()
 
 
 
