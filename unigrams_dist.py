@@ -32,7 +32,7 @@ for word in positive_text:
         if word in word_distribution.keys():
             word_distribution[word][0] += 1
         else:
-            word_distribution[word] = (1,0)
+            word_distribution[word] = [1,0]
 
 tot_neg = 0
 for word in negative_text:
@@ -41,7 +41,7 @@ for word in negative_text:
         if word in word_distribution.keys():
             word_distribution[word][1] += 1
         else:
-            word_distribution[word] = (0,1)
+            word_distribution[word] = [0,1]
 
 stp_words = word_distribution.keys()
 pos_counts = []
