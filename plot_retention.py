@@ -3,7 +3,6 @@ Plot label/prediction (or both) retention plots per class
 '''
 
 import argparse
-from cProfile import label
 import os
 import sys
 import matplotlib.pyplot as plt
