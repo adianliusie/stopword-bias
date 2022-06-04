@@ -51,8 +51,8 @@ if __name__ == '__main__':
     _, pos_class_fracs_label = RG_label.retention_plot(feats_label, cum=True)
 
     # Plot
-    plt.plot(fracs, pos_class_fracs_pred, label=f'pred class {args.class_ind}')
-    plt.plot(fracs, pos_class_fracs_label, label=f'label class {args.class_ind}')
+    plt.plot(fracs, pos_class_fracs_pred[args.class_ind], label=f'pred class {args.class_ind}')
+    plt.plot(fracs, pos_class_fracs_label[args.class_ind], label=f'label class {args.class_ind}')
     plt.ylabel(f'Cumulative Class Fraction')
     plt.xlabel(f'Retention Fraction')
     plt.legend()
