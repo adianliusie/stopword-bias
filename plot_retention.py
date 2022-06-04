@@ -50,13 +50,19 @@ if __name__ == '__main__':
     feats_label = RG_label.get_feat(args.FEAT)
     _, pos_class_fracs_label = RG_label.retention_plot(feats_label, cum=True)
 
-    # Plot WORK IN PROGRESS
+    # Plot
     plt.plot(fracs[args.ignore:], pos_class_fracs_pred[args.ignore:], label=f'pred class {args.class_ind}')
     plt.plot(fracs[args.ignore:], pos_class_fracs_pred[args.ignore:], label=f'label class {args.class_ind}')
     plt.ylabel(f'Cumulative Class Fraction')
     plt.xlabel(f'Retention Fraction')
     plt.legend()
-    out_file = f'{args.OUT}/data_{args.DATANAME}_feature_{args.FEAT}_mode_{args.mode}.png'
+
+    # Save
+    model_name = args.MODEL_PATH
+    model_name = model_name.split('/')
+    model_name = model_name[-4:-2]
+    model_name = '-'.join(model_name)
+    out_file = f'{args.OUT}/data_{args.DATANAME}_feature_{args.FEAT}_mode_{args.mode}_model_{model_name}.png'
     plt.savefig(out_file, bbox_inches='tight')
         
 
