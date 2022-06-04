@@ -21,6 +21,7 @@ if __name__ == '__main__':
     commandLineParser.add_argument('OUT', type=str, help='Directory to save output figures')
     commandLineParser.add_argument('--class_ind', type=int, default=0, help='target class')
     commandLineParser.add_argument('--mode', type=str, default='test', help='mode of data')
+    commandLineParser.add_argument('--cum', type=str, default='yes', help='cumulative plot')
     args = commandLineParser.parse_args()
 
     # Save the command run
@@ -41,6 +42,10 @@ if __name__ == '__main__':
     preds = [preds_dict[i] for i in range(len(preds_dict))]
     labels = [labels_dict[i] for i in range(len(labels_dict))]
 
+    cum = True
+    if args.cum == 'no':
+        cum = False
+
     # Get retention curves
     RG_pred = RetentionGenerator(sentences, preds)
     RG_label = RetentionGenerator(sentences, labels)
@@ -53,7 +58,10 @@ if __name__ == '__main__':
     # Plot
     plt.plot(fracs, pos_class_fracs_pred[args.class_ind], label=f'pred class {args.class_ind}')
     plt.plot(fracs, pos_class_fracs_label[args.class_ind], label=f'label class {args.class_ind}')
-    plt.ylabel(f'Cumulative Class Fraction')
+    if cum:
+        plt.ylabel(f'Cumulative Class Fraction')
+    else:
+        plt.ylabel(f'Class Fraction')
     plt.xlabel(f'Retention Fraction')
     plt.legend()
 
