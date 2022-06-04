@@ -37,7 +37,7 @@ class RetentionGenerator(FeatureExtractor):
         super().__init__(sentences)
         self.ys = ys
     
-    def retention_plot(self, features):
+    def retention_plot(self, features, cum=True):
 
         fracs = [(i+1)/len(features) for i,_ in enumerate(features)]
 
@@ -48,13 +48,20 @@ class RetentionGenerator(FeatureExtractor):
         # retention plot per class
         num_classes = len(set(self.ys))
         pos_class_fracs = defaultdict(list) # key refers to class index
-        cum_count = defaultdict(int)
+        cum_count = defaultdict(lambda x: [0])
 
         for i, y in enumerate(ordered_ys):
             for c in range(num_classes):
                 if y==c:
-                    cum_count[c] += 1
-                pos_class_fracs[c].append(cum_count[c]/(i+1))
+                    cum_count[c].append(cum_count[c][-1] + 1)
+                else:
+                    cum_count[c].append(cum_count[c][-1])
+                pos_class_fracs[c].append(cum_count[c][-1]/(i+1))
 
+        if cum:
+            cum_count_fracs = {}
+            for c in range(num_classes):
+                cum_count_fracs[c] = [val/cum_count[c][-1] for val in cum_count[c][1:]]
+            return fracs, cum_count_fracs
         return fracs, pos_class_fracs
 
