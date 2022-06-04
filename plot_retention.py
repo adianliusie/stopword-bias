@@ -51,9 +51,9 @@ if __name__ == '__main__':
     RG_label = RetentionGenerator(sentences, labels)
 
     feats_pred = RG_pred.get_feat(args.FEAT)
-    fracs, pos_class_fracs_pred = RG_pred.retention_plot(feats_pred, cum=True)
+    fracs, pos_class_fracs_pred = RG_pred.retention_plot(feats_pred, cum)
     feats_label = RG_label.get_feat(args.FEAT)
-    _, pos_class_fracs_label = RG_label.retention_plot(feats_label, cum=True)
+    _, pos_class_fracs_label = RG_label.retention_plot(feats_label, cum)
 
     # Plot
     plt.plot(fracs, pos_class_fracs_pred[args.class_ind], label=f'pred class {args.class_ind}')
