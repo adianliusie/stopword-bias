@@ -48,7 +48,7 @@ class RetentionGenerator(FeatureExtractor):
         # retention plot per class
         num_classes = len(set(self.ys))
         pos_class_fracs = defaultdict(list) # key refers to class index
-        cum_count = defaultdict(lambda x: [0])
+        cum_count = defaultdict(lambda: [0])
 
         for i, y in enumerate(ordered_ys):
             for c in range(num_classes):
