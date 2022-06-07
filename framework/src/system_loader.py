@@ -14,13 +14,16 @@ class SystemLoader(Trainer):
     def __init__(self, exp_path:str):
         self.dir = DirHelper.load_dir(exp_path)
         
-    def set_up_helpers(self, args):
+    def set_up_helpers(self):
         #load training arguments and set up helpers
+        args = self.dir.load_args('model_args.json')
         super().set_up_helpers(args)
 
         #load final model
         self.load_model()
         self.model.eval()
+        self.device = 'cuda:0'
+        self.to(self.device)
 
     def load_preds(self, data_name, mode):
         probs = self.load_probs(data_name, mode)
@@ -34,9 +37,7 @@ class SystemLoader(Trainer):
     def load_probs(self, data_name, mode):
         """loads predictions if saved, else generates"""
         if not self.dir.probs_exists(data_name, mode):
-            args = self.dir.load_args('model_args.json')
-            self.set_up_helpers(args)
-            self.to('cuda:0')
+            self.set_up_helpers()
             self.generate_probs(data_name, mode)
         probs = self.dir.load_probs(data_name, mode)
         return probs
@@ -49,6 +50,7 @@ class SystemLoader(Trainer):
     def _probs(self, data_name, mode='test'):
         """get model predictions for given data"""
         self.model.eval()
+        self.to(self.device)
         eval_batches = self._get_eval_batches(data_name, mode)
 
         probabilties = {}
@@ -64,8 +66,7 @@ class SystemLoader(Trainer):
 
     def _get_eval_batches(self, data_name, mode='test'):
         #get eval data- data_loader returns (train, dev, test) so index
-        split_index = {'train':0, 'dev':1, 'test':2}
-        eval_data = self.data_loader(data_name)[split_index[mode]]
+        eval_data = self.data_loader.get_data_split(data_name, mode)
         eval_batches = self.batcher(data=eval_data, bsz=1, shuffle=False)
         return eval_batches
 

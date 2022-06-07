@@ -9,6 +9,7 @@ def load_data(data_name:str, lim:int=None)->Tuple['train', 'dev', 'test']:
     if data_name == 'imdb':    return _load_imdb(lim)
     if data_name == 'dbpedia': return _load_dbpedia(lim)
     if data_name == 'rt':      return _load_rotten_tomatoes(lim)
+    if data_name == 'sst':     return _load_sst(lim)
     else: raise ValueError('invalid dataset provided')
 
 def _load_imdb(lim:int=None)->List[Dict['text', 'label']]:
@@ -36,6 +37,17 @@ def _load_rotten_tomatoes(lim:int=None):
     test  = list(dataset['test'])[:lim]
     return train, dev, test
     
+def _load_sst(lim:int=None)->List[Dict['text', 'label']]:
+    dataset = load_dataset("gpt3mix/sst2")
+    train = list(dataset['train'])[:lim]
+    dev   = list(dataset['validation'])[:lim]
+    test  = list(dataset['test'])[:lim]
+    
+    train = [_invert_labels(ex) for ex in train]
+    dev   = [_invert_labels(ex) for ex in dev]
+    test  = [_invert_labels(ex) for ex in test]
+    return train, dev, test
+
 def _create_splits(examples:list, ratio=0.8)->Tuple[list, list]:
     examples = deepcopy(examples)
     split_len = int(ratio*len(examples))
@@ -51,4 +63,9 @@ def _key_to_text(ex:dict, old_key='content'):
     """ convert key name from the old_key to 'text' """
     ex = ex.copy()
     ex['text'] = ex.pop(old_key)
+    return ex
+
+def _invert_labels(ex:dict):
+    ex = ex.copy()
+    ex['label'] = 1 - ex['label']
     return ex

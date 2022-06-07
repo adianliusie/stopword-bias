@@ -1,6 +1,7 @@
 import argparse
 import os
 import shutil
+import pprint
 
 from src.trainer import Trainer
 
@@ -39,8 +40,11 @@ if __name__ == '__main__':
     model_args = model_parser.parse_known_args()[0]
     train_args = train_parser.parse_known_args()[0]
     
-    if model_args.formatting: assert [model_args.formatting in ['mask_content', 'mask_stopwords']]  
-
+    pprint.pprint(model_args.__dict__)
+    print()
+    pprint.pprint(train_args.__dict__)
+    print()
+    
     # Overwrites directory if it exists
     if model_args.force:
         exp_name = model_args.exp_name
