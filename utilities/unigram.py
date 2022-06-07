@@ -59,14 +59,14 @@ def unigram_all(sentences, train_data):
     # get nll ratio for each sentence
     all_nll_ratios = []
     for sentence in sentences:
-        pos_likelihood = 1
-        neg_likelihood = 1
+        pos_likelihood = 0
+        neg_likelihood = 0
         for w in sentence.split():
             # only perform on stopwords
             if w not in stp_words:
                 continue
             idx = stp_words.index(w)
-            pos_likelihood = pos_likelihood * pos_dist[idx]
-            neg_likelihood = neg_likelihood * neg_dist[idx]
+            pos_likelihood += np.log(pos_dist[idx])
+            neg_likelihood +=  np.log(neg_dist[idx])
         all_nll_ratios.append(pos_likelihood/neg_likelihood)
     return all_nll_ratios
