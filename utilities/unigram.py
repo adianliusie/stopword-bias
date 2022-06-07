@@ -69,5 +69,5 @@ def unigram_all(sentences, train_data):
             pos_likelihood += np.log(pos_dist[idx])
             neg_likelihood +=  np.log(neg_dist[idx])
         all_nll_ratios.append(pos_likelihood-neg_likelihood)
-        print(pos_likelihood-neg_likelihood)
+        print(pos_likelihood, neg_likelihood)
     return all_nll_ratios
