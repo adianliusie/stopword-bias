@@ -1,5 +1,8 @@
 from collections import defaultdict
 from utilities.perplexity import perplexity_all
+from utilities.unigram import unigram_all
+
+from framework.src.utils.data_utils import load_data
 
 class FeatureExtractor():
     '''
@@ -15,6 +18,8 @@ class FeatureExtractor():
             return self.num_chars()
         if feat_name == 'perplexity':
             return self.perplexity()
+        if feat_name == 'unigram':
+            return self.unigram()
 
     def num_words(self):
         return [len(s.split()) for s in self.sentences]
@@ -24,6 +29,10 @@ class FeatureExtractor():
     
     def perplexity(self):
         return perplexity_all(self.sentences)
+
+    def unigram(self, train_data_name='imdb'):
+        train, dev, test = load_data(train_data_name)
+        return unigram_all(self.sentences, train)
 
 
 
