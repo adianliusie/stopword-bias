@@ -54,12 +54,16 @@ if __name__ == '__main__':
     fracs, pos_class_fracs_pred = RG_pred.retention_plot(feats_pred, cum)
     feats_label = RG_label.get_feat(args.FEAT)
     _, pos_class_fracs_label = RG_label.retention_plot(feats_label, cum)
+    _, pos_class_fracs_ideal = RG_label.retention_plot(labels, cum)
+
 
     # Plot
-    plt.plot(fracs, pos_class_fracs_pred[args.class_ind], label=f'pred class {args.class_ind}')
-    plt.plot(fracs, pos_class_fracs_label[args.class_ind], label=f'label class {args.class_ind}')
+    plt.plot(fracs, pos_class_fracs_pred[args.class_ind], label=f'pred')
+    plt.plot(fracs, pos_class_fracs_label[args.class_ind], label=f'label')
+    plt.plot(fracs, fracs, label=f'random', linestyle='dashed')
+    plt.plot(fracs, pos_class_fracs_ideal[args.class_ind], label=f'ideal', linestyle='dashed')
     if cum:
-        plt.ylabel(f'Cumulative Class Fraction')
+        plt.ylabel(f'Cumulative Class {args.class_ind} Fraction')
     else:
         plt.ylabel(f'Class Fraction')
     plt.xlabel(f'Retention Fraction')
