@@ -33,6 +33,7 @@ class DataLoader:
                 text = self.mask_content(text)
                 
             elif self.formatting in ['remove_content', 'shuffle_stopwords']:
+                text = re.sub(r'[^\w\s\']',' ', text) #remove all punct except for '
                 text = self.mask_content(text)
                 text = text.replace('[MASK]', '')
                 text = re.sub(' +', ' ', text) #rm multi spaces
