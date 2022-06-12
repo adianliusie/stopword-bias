@@ -10,6 +10,7 @@ def load_data(data_name:str, lim:int=None)->Tuple['train', 'dev', 'test']:
     if data_name == 'dbpedia': return _load_dbpedia(lim)
     if data_name == 'rt':      return _load_rotten_tomatoes(lim)
     if data_name == 'sst':     return _load_sst(lim)
+    if data_name == 'twitter': return _load_twitter(lim)
     else: raise ValueError('invalid dataset provided')
 
 def _load_imdb(lim:int=None)->List[Dict['text', 'label']]:
@@ -47,6 +48,38 @@ def _load_sst(lim:int=None)->List[Dict['text', 'label']]:
     dev   = [_invert_labels(ex) for ex in dev]
     test  = [_invert_labels(ex) for ex in test]
     return train, dev, test
+
+def _load_twitter(lim:int=None)->List[Dict['text', 'label']]:
+    base_path = '/home/alta/BLTSpeaking/exp-vr313/Emotion/data/'
+    CLASS_TO_IND = {
+        'love': 1,
+        'joy': 1,
+        'fear': 0,
+        'anger': 0,
+        'surprise': 1,
+        'sadness': 0,
+    }
+    train = _read_file(f'{base_path}train.txt', CLASS_TO_IND)
+    dev = _read_file(f'{base_path}val.txt', CLASS_TO_IND)
+    test = _read_file(f'{base_path}test.txt', CLASS_TO_IND)
+    return train, dev, test
+
+
+
+def _read_file(filepath, CLASS_TO_IND):
+
+    with open(filepath, 'r') as f:
+        lines = f.readlines()
+    lines = [line.rstrip('\n') for line in lines]
+
+    examples = []
+    for line in lines:
+        items = line.split(';')
+        try:
+            examples.append({'text':items[0], 'label':CLASS_TO_IND[items[1]]})
+        except:
+            pass
+    return examples
 
 def _create_splits(examples:list, ratio=0.8)->Tuple[list, list]:
     examples = deepcopy(examples)
