@@ -21,7 +21,7 @@ class DataLoader:
         
         output = []
         for ex in tqdm(data):
-            text  = ex['text']
+            text  = ex['text'].lower()
             label = ex['label']
             
             if self.formatting == 'mask_stopwords':
@@ -104,9 +104,11 @@ class DataLoader:
     
     def _get_pickle_path(self, data_name, split_name, formatting):
         return f'data_cache/{data_name}.{split_name}.{self.formatting}.pkl'
+    
     @property
     def stop_word_list(self):
         if not hasattr(self, '_stop_word_list'):  
             self._stop_word_list = stopwords.words('english')
+            self._stop_word_list = [i.lower() for i in self._stop_word_list]
         return self._stop_word_list
     

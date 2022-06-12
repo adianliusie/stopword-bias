@@ -64,10 +64,7 @@ def _load_twitter(lim:int=None)->List[Dict['text', 'label']]:
     test = _read_file(f'{base_path}test.txt', CLASS_TO_IND)
     return train, dev, test
 
-
-
 def _read_file(filepath, CLASS_TO_IND):
-
     with open(filepath, 'r') as f:
         lines = f.readlines()
     lines = [line.rstrip('\n') for line in lines]
