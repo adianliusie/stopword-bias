@@ -17,7 +17,7 @@ args = commandLineParser.parse_args()
 
 system = SystemLoader(args.MODEL_PATH)
 sentences_dict = system.load_inputs(args.DATANAME,  mode='test')
-labels_dict = system.load_labels(args.DATANAME, mode=args.mode='test')
+labels_dict = system.load_labels(args.DATANAME, mode='test')
 
 sentences = [sentences_dict[i] for i in range(len(sentences_dict))]
 labels = [labels_dict[i] for i in range(len(labels_dict))]
