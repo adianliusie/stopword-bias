@@ -1,4 +1,5 @@
 framework/trained_models
+framework/data_cache
 
 */.ipynb_checkpoints/
 pynb_checkpoints/

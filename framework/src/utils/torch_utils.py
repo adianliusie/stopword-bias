@@ -1,11 +1,12 @@
 import torch
 from typing import Callable
-from transformers import BertModel, ElectraModel, RobertaModel
+from transformers import BertModel, ElectraModel, RobertaModel, BertConfig
 from transformers import BertTokenizerFast, ElectraTokenizerFast, RobertaTokenizerFast
 
 def load_tokenizer(system:str)->'Tokenizer':
     """ downloads and returns the relevant pretrained tokenizer from huggingface """
     if system   == 'bert'          : tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased")
+    elif system == 'bert_rand'     : tokenizer = BertTokenizerFast.from_pretrained("bert-base-uncased")
     elif system == 'bert_cased'    : tokenizer = BertTokenizerFast.from_pretrained('bert-base-cased')
     elif system == 'bert_large'    : tokenizer = BertTokenizerFast.from_pretrained("bert-large-uncased")
     elif system == 'roberta'       : tokenizer = RobertaTokenizerFast.from_pretrained("roberta-base")
@@ -17,6 +18,7 @@ def load_tokenizer(system:str)->'Tokenizer':
 def load_transformer(system:str)->'Model':
     """ downloads and returns the relevant pretrained transformer from huggingface """
     if   system == 'bert'       : trans_model = BertModel.from_pretrained('bert-base-uncased', return_dict=True)
+    elif system == 'bert_rand'  : trans_model = BertModel(BertConfig())
     elif system == 'bert_cased' : trans_model = BertModel.from_pretrained('bert-base-cased', return_dict=True)
     elif system == 'bert_large' : trans_model = BertModel.from_pretrained('bert-large-uncased', return_dict=True)
     elif system == 'roberta'    : trans_model = RobertaModel.from_pretrained('roberta-base', return_dict=True)

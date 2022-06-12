@@ -13,7 +13,7 @@ group.add_argument('--exp_name', type=str,         help='name to save the experi
 group.add_argument('--temp', action='store_true',  help='if set, exp will be saved in temp dir', )
 
 model_parser.add_argument('--transformer',  default='bert',     type=str,  help='[bert, roberta, electra ...]')
-model_parser.add_argument('--formatting',   default=None,       type=str,  help='[None, mask_content]')
+model_parser.add_argument('--formatting',   default=None,       type=str,  help='[None, mask_content, shuffle_stopwords]')
 model_parser.add_argument('--max_len',      default=512,        type=int,  help='max length of transformer inputs')
 model_parser.add_argument('--device',       default='cuda',     type=str,  help='device to use [cuda, cpu]')
 

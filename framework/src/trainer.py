@@ -71,7 +71,7 @@ class Trainer():
                 wandb.log({"dev_loss":perf.loss, "dev_acc":perf.acc})
 
             # save performance if best dev performance 
-            if perf.acc < best_epoch[1]:
+            if perf.acc > best_epoch[2]:
                 best_epoch = (epoch, perf.loss, perf.acc)
                 if t_args.save: self.save_model()
 
