@@ -53,25 +53,9 @@ class RetentionGenerator(FeatureExtractor):
 
 
         fracs = [(i+1)/len(features) for i,_ in enumerate(features)]
-        if print_feat:
-            pass
-            # self.ys = shuffle(self.ys)
-            # print(features[:100])
-            # print(sum(self.ys), sum(self.ys[:12500]))
-
-        items = [(f, y) for f,y in zip(features, self.ys)]
-        ordered_items = sorted(items, key=lambda x: x[0])
-        ordered_ys = [o[1] for o in ordered_items]
-        pred_labs = [0 if p<0 else 1 for p in [o[0] for o in ordered_items]]
+        ordered_ys = [x for _,x in sorted(zip(features, self.ys), key=lambda x: x[0])]
+        pred_labs = [0 if p<0 else 1 for p in sorted(features)]
         print('Accuracy', accuracy_score(pred_labs, ordered_ys))
-        if print_feat:
-            # print([o[0] for i,o in enumerate(ordered_items) if i == int(len(ordered_items)/2)])
-            print([o for o in items[:10]])
-            print([o for o in ordered_items[:10]])
-            # print(ordered_ys[:100])
-            # print(sum(ordered_ys), sum(ordered_ys[:12500]))
-        
-
 
         # retention plot per class
         num_classes = len(set(self.ys))
@@ -85,10 +69,6 @@ class RetentionGenerator(FeatureExtractor):
                 else:
                     cum_count[c].append(cum_count[c][-1])
                 pos_class_fracs[c].append(cum_count[c][-1]/(i+1))
-
-        # temp
-        if print_feat:
-            print(cum_count[1][:100])
 
         if cum:
             cum_count_fracs = {}
