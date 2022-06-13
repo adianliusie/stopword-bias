@@ -9,7 +9,7 @@ from .utils.torch_utils import no_grad
 from .utils.data_utils import load_data
 from .helpers import DirHelper
 
-class SystemLoader():
+class EnsembleLoader(SystemLoader):
     def __init__(self, exp_path:str):
         self.exp_path = exp_path
         self.paths  = [f'{exp_path}/{seed}' for seed in os.listdir(exp_path)]
