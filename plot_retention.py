@@ -86,6 +86,7 @@ if __name__ == '__main__':
         # Plot
         plt.plot(fracs, pos_class_fracs_pred[args.class_ind], label=f'{mdl_name}')
 
+    print(pos_class_fracs_label[1])
     plt.plot(fracs, pos_class_fracs_label[args.class_ind], label=f'label')
     plt.plot(fracs, fracs, label=f'random', linestyle='dashed')
     plt.plot(fracs, pos_class_fracs_ideal[args.class_ind], label=f'ideal', linestyle='dashed')
