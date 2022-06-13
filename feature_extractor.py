@@ -5,6 +5,7 @@ from utilities.perplexity import perplexity_all
 from utilities.unigram import unigram_all
 
 from framework.src.utils.data_utils import load_data
+from sklearn.metrics import accuracy_score
 
 class FeatureExtractor():
     '''
@@ -50,6 +51,8 @@ class RetentionGenerator(FeatureExtractor):
     
     def retention_plot(self, features, cum=True, print_feat=False):
 
+        pred_labs = [0 if p<0 else 1 for p in features]
+        print('Accuracy', accuracy_score(pred_labs, self.ys))
         fracs = [(i+1)/len(features) for i,_ in enumerate(features)]
         if print_feat:
             pass
