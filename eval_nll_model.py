@@ -22,7 +22,7 @@ labels_dict = system.load_labels(args.DATANAME, mode='test')
 sentences = [sentences_dict[i] for i in range(len(sentences_dict))]
 labels = [labels_dict[i] for i in range(len(labels_dict))]
 
-nll_system = NllModel(args.DATANAME, 'stop', thresh=0.32)
+nll_system = NllModel(args.DATANAME, 'stop', thresh=-2.725)
 preds_nll = nll_system.load_preds(sentences)
 
 acc = accuracy_score(labels, preds_nll)
