@@ -2,6 +2,7 @@ from operator import neg
 from webbrowser import get
 import numpy as np
 from nltk.corpus import stopwords
+import re
 
 def get_distributions(train):
 
@@ -17,7 +18,9 @@ def get_distributions(train):
             neg_examples.append(ex['text'])
 
     positive_text = ' '.join(pos_examples)
+    positive_text = re.sub(r'[^\w\s\']',' ', positive_text).lower()
     negative_text = ' '.join(neg_examples)
+    negative_text = re.sub(r'[^\w\s\']',' ', negative_text).lower()
     positive_words = positive_text.split()
     negative_words = negative_text.split()
 
@@ -59,6 +62,7 @@ def unigram_all(sentences, train_data):
     # get nll ratio for each sentence
     all_nll_ratios = []
     for sentence in sentences:
+        sentence = re.sub(r'[^\w\s\']',' ', sentence).lower()
         pos_likelihood = 0
         neg_likelihood = 0
         for w in sentence.split():
