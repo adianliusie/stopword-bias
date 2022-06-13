@@ -50,7 +50,7 @@ class RetentionGenerator(FeatureExtractor):
 
         fracs = [(i+1)/len(features) for i,_ in enumerate(features)]
         if print_feat:
-            print(features)
+            print(features[:100])
             print(sum(self.ys), sum(self.ys[:12500]))
 
         items = [(f, y) for f,y in zip(features, self.ys)]
