@@ -9,7 +9,7 @@ from .utils.torch_utils import no_grad
 from .utils.data_utils import load_data
 from .helpers import DirHelper
 
-class EnsembleLoader():
+class SystemLoader():
     def __init__(self, exp_path:str):
         self.exp_path = exp_path
         self.paths  = [f'{exp_path}/{seed}' for seed in os.listdir(exp_path)]
@@ -28,13 +28,26 @@ class EnsembleLoader():
             ensemble[conv_id] = probs
         return ensemble    
 
-    def load_preds(self, data_name, mode):
-        probs = self.load_probs(data_name, mode)
+    def load_formatted_probs(self, formatting, data_name, mode)->dict:
+        seed_probs = [seed.load_formatted_probs(formatting, data_name, mode) for seed in self.seeds]
+        
+        conv_ids = seed_probs[0].keys()
+        assert all([i.keys() == conv_ids for i in seed_probs])
+
+        ensemble = {}
+        for conv_id in conv_ids:
+            probs = [seed[conv_id] for seed in seed_probs]
+            probs = np.mean(probs, axis=0)
+            ensemble[conv_id] = probs
+        return ensemble    
+    
+    def load_formatted_preds(self, formatting, data_name, mode):
+        probs = self.load_formatted_probs(formatting, data_name, mode)
         preds = {}
         for k, probs in probs.items():
             preds[k] = int(np.argmax(probs, axis=-1))
         return preds
-    
+        
 class SystemLoader(Trainer):
     """Base loader class- the inherited class inherits
        the Trainer so has all experiment methods"""
@@ -89,16 +102,36 @@ class SystemLoader(Trainer):
                 y = F.softmax(y, dim=-1)
             probabilties[sample_id] = y.cpu().numpy()
         return probabilties
-
-    def formatted_probs(self, formatting, data_name, mode='test'):
+    
+    def load_formatted_preds(self, formatting, data_name, mode):
+        probs = self.load_formatted_probs(formatting, data_name, mode)
+        preds = {}
+        for k, probs in probs.items():
+            preds[k] = int(np.argmax(probs, axis=-1))  
+        return preds
+    
+    def load_formatted_probs(self, formatting:str, data_name:str, mode:str):
         """ evaluates the model in the different formatting set up"""
-        if formatting == self.formatting: 
+        #if same as default formatting, return default function
+        if formatting == self.dir.load_args('model_args.json').formatting:
             return self.load_probs(data_name, mode)
-        else:
-            og_formatting = self.formatting
-            data_loader.formatting = formatting
-            
         
+        #if predictions not cached, generate and cache them
+        if not self.dir.probs_exists(data_name, mode, dir_name=formatting):
+            self.set_up_helpers()
+            og_formatting = self.data_loader.formatting
+            
+            self.data_loader.formatting = formatting
+            probs = self._probs(data_name, mode)
+            self.dir.make_dir(formatting)
+            self.dir.save_probs(probs, data_name, mode, dir_name=formatting)
+            
+            self.data_loader.formatting = og_formatting
+        
+        #return predictions for this evaluation mode
+        probs = self.dir.load_probs(data_name, mode, dir_name=formatting)
+        return probs
+            
     def _get_eval_batches(self, data_name, mode='test'):
         #get eval data- data_loader returns (train, dev, test) so index
         eval_data = self.data_loader.get_data_split(data_name, mode)

@@ -21,10 +21,10 @@ class DirHelper():
             self.exp_path = exp_path
         
         self.abs_path = os.path.abspath(self.exp_path)
-        self.make_dir()
+        self.set_up_dir()
         self.log = self.make_logger(file_name='log')
 
-    def make_dir(self):
+    def set_up_dir(self):
         """makes experiments directory"""
         os.makedirs(self.abs_path)
         os.mkdir(f'{self.abs_path}/models')
@@ -107,9 +107,9 @@ class DirHelper():
     def file_exists(self, file_name:str)->bool:
         return os.path.isfile(f'{self.abs_path}/{file_name}') 
     
-    def probs_exists(self, data_name:str, mode:str)->bool:
+    def probs_exists(self, data_name:str, mode:str, dir_name='preds')->bool:
         eval_name = f'{data_name}_{mode}'
-        pred_path = f'{self.abs_path}/preds/{eval_name}'
+        pred_path = f'{self.abs_path}/{dir_name}/{eval_name}'
         return os.path.isfile(pred_path) 
 
     def save_args(self, name:str, data:namedtuple):
@@ -121,14 +121,19 @@ class DirHelper():
         save_path = f'{self.abs_path}/{name}'
         save_json(data, save_path)
 
-    def save_probs(self, preds, data_name, mode):
+    def save_probs(self, preds, data_name, mode, dir_name='preds'):
         """saves predictions directory"""
         eval_name = f'{data_name}_{mode}'
-        pred_path = f'{self.abs_path}/preds/{eval_name}'
+        pred_path = f'{self.abs_path}/{dir_name}/{eval_name}'
         
         with open(pred_path, 'wb') as handle:
             pickle.dump(preds, handle)
-            
+    
+    def make_dir(self, dir_name:str):
+        if not os.path.isdir(f'{self.abs_path}/{dir_name}'): 
+            print(f'{self.abs_path}/{dir_name}')
+            os.mkdir(f'{self.abs_path}/{dir_name}')
+        
     ### Methods for loading ############################################
   
     @classmethod
@@ -146,10 +151,10 @@ class DirHelper():
     def load_dict(self, name:str)->dict:
         return load_json(f'{self.abs_path}/{name}')
     
-    def load_probs(self, data_name:str, mode:str):
+    def load_probs(self, data_name:str, mode:str, dir_name='preds'):
         """saves predictions directory"""
         eval_name = f'{data_name}_{mode}'
-        pred_path = f'{self.abs_path}/preds/{eval_name}'
+        pred_path = f'{self.abs_path}/{dir_name}/{eval_name}'
         with open(pred_path, 'rb') as handle:
             predictions = pickle.load(handle)
         return predictions
