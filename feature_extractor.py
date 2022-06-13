@@ -52,7 +52,8 @@ class RetentionGenerator(FeatureExtractor):
 
         fracs = [(i+1)/len(features) for i,_ in enumerate(features)]
         if print_feat:
-            self.ys = shuffle(self.ys)
+            pass
+            # self.ys = shuffle(self.ys)
             # print(features[:100])
             # print(sum(self.ys), sum(self.ys[:12500]))
 
@@ -61,8 +62,8 @@ class RetentionGenerator(FeatureExtractor):
         ordered_ys = [o[1] for o in ordered_items]
         if print_feat:
             # print([o[0] for i,o in enumerate(ordered_items) if i == int(len(ordered_items)/2)])
-            print([o for o in items[:100]])
-            print([o for o in ordered_items[:100]])
+            print([o for o in items[:10]])
+            print([o for o in ordered_items[:10]])
             # print(ordered_ys[:100])
             # print(sum(ordered_ys), sum(ordered_ys[:12500]))
         
