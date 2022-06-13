@@ -54,9 +54,10 @@ class RetentionGenerator(FeatureExtractor):
         ordered_items = sorted(items, key=lambda x: x[0])
         ordered_ys = [o[1] for o in ordered_items]
         if print_feat:
-            print([o[0] for i,o in enumerate(ordered_items) if i == int(len(ordered_items)/2)])
-            print([o[0] for o in ordered_items[:100]])
-            print(ordered_ys[:100])
+            # print([o[0] for i,o in enumerate(ordered_items) if i == int(len(ordered_items)/2)])
+            # print([o[0] for o in ordered_items[:100]])
+            # print(ordered_ys[:100])
+            print(sum(ordered_ys), sum(ordered_ys[:12500]))
         
 
 
