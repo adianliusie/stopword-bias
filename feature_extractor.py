@@ -73,7 +73,8 @@ class RetentionGenerator(FeatureExtractor):
                 pos_class_fracs[c].append(cum_count[c][-1]/(i+1))
 
         # temp
-        print(cum_count[1][:100])
+        if print_feat:
+            print(cum_count[1][:100])
 
         if cum:
             cum_count_fracs = {}
