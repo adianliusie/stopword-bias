@@ -53,7 +53,7 @@ class RetentionGenerator(FeatureExtractor):
         items = [(f, y) for f,y in zip(features, self.ys)]
         ordered_items = sorted(items, key=lambda x: x[0])
         if print_feat:
-            print([o[0] for o in ordered_items])
+            print([o[0] for i,o in enumerate(ordered_items) if i == int(len(ordered_items)/2)])
         ordered_ys = [o[1] for o in ordered_items]
 
         # retention plot per class
