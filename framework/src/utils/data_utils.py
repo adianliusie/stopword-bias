@@ -11,6 +11,7 @@ def load_data(data_name:str, lim:int=None)->Tuple['train', 'dev', 'test']:
     if data_name == 'rt':      return _load_rotten_tomatoes(lim)
     if data_name == 'sst':     return _load_sst(lim)
     if data_name == 'twitter': return _load_twitter(lim)
+    if data_name == 'yelp': return _load_yelp(lim)
     else: raise ValueError('invalid dataset provided')
 
 def _load_imdb(lim:int=None)->List[Dict['text', 'label']]:
@@ -36,6 +37,13 @@ def _load_rotten_tomatoes(lim:int=None):
     train = list(dataset['train'])[:lim]
     dev   = list(dataset['validation'])[:lim]
     test  = list(dataset['test'])[:lim]
+    return train, dev, test
+
+def _load_yelp(lim:int=None):
+    dataset = load_dataset("yelp_polarity")
+    train_data = list(dataset['train'])[:lim]
+    train, dev = _create_splits(train_data, 0.8)
+    test       = list(dataset['test'])[:lim]
     return train, dev, test
     
 def _load_sst(lim:int=None)->List[Dict['text', 'label']]:
