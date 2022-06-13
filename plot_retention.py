@@ -86,8 +86,6 @@ if __name__ == '__main__':
         # Plot
         plt.plot(fracs, pos_class_fracs_pred[args.class_ind], label=f'{mdl_name}')
 
-    print(len(pos_class_fracs_label[args.class_ind]))
-    print(pos_class_fracs_label[args.class_ind][:500])
     plt.plot(fracs, pos_class_fracs_label[args.class_ind], label=f'label')
     plt.plot(fracs, fracs, label=f'random', linestyle='dashed')
     plt.plot(fracs, pos_class_fracs_ideal[args.class_ind], label=f'ideal', linestyle='dashed')
@@ -98,11 +96,6 @@ if __name__ == '__main__':
     plt.xlabel(f'Retention Fraction')
     plt.legend()
 
-    # Save
-    # model_name = args.MODEL_PATH
-    # model_name = model_name.split('/')
-    # model_name = model_name[-2:]
-    # model_name = '-'.join(model_name)
     out_file = f'{args.out}/data_{args.dataname}_feature_{args.feat}_mode_{args.mode}.png'
     plt.savefig(out_file, bbox_inches='tight')
         
