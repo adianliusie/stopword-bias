@@ -6,7 +6,7 @@ import argparse
 import os
 import sys
 import matplotlib.pyplot as plt
-from framework.src.system_loader import SystemLoader
+from framework.src.system_loader import EnsembleLoader
 from feature_extractor import RetentionGenerator
 
 
@@ -14,15 +14,33 @@ from feature_extractor import RetentionGenerator
 if __name__ == '__main__':
 
     # Get command line arguments
-    commandLineParser = argparse.ArgumentParser()
-    commandLineParser.add_argument('DATANAME', type=str, help='dataset e.g. imdb')
-    commandLineParser.add_argument('MODEL_PATH', type=str, help='path to trained model')
-    commandLineParser.add_argument('FEAT', type=str, help='e.g. num_chars')
-    commandLineParser.add_argument('OUT', type=str, help='Directory to save output figures')
-    commandLineParser.add_argument('--class_ind', type=int, default=0, help='target class')
-    commandLineParser.add_argument('--mode', type=str, default='test', help='mode of data')
-    commandLineParser.add_argument('--cum', type=str, default='yes', help='cumulative plot')
-    args = commandLineParser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--dataname',
+                        help='dataset e.g. imdb.',
+                        required=True)
+    parser.add_argument('--model_paths',
+                        help='Path to the model files.', nargs='+',
+                        required=True)
+    parser.add_argument('--model_names',
+                        help='names for models in legend.', nargs='+',
+                        required=True)
+    parser.add_argument('--feat',
+                        help='e.g. unigram.',
+                        required=True)
+    parser.add_argument('--out',
+                        help='Directory to save output figures.',
+                        required=True)
+    parser.add_argument('--class_ind',
+                        type=int,
+                        help='target class',
+                        default='1')   
+    parser.add_argument('--mode',
+                        help='mode of data',
+                        default='test')
+    parser.add_argument('--cum',
+                        help='cumulative plot?',
+                        default='yes')                      
+    args = parser.parse_args()
 
     # Save the command run
     if not os.path.isdir('CMDs'):
@@ -31,34 +49,37 @@ if __name__ == '__main__':
         f.write(' '.join(sys.argv)+'\n')
     
     # Load system
-    system = SystemLoader(args.MODEL_PATH)
+    systems = []
+    for pth, mdl_name in zip(args.model_paths, args.model_names):
+        system = EnsembleLoader(pth)
 
-    # Load labels and predictions
-    sentences_dict = system.load_inputs(args.DATANAME,  mode=args.mode)
-    preds_dict  = system.load_preds(args.DATANAME,  mode=args.mode)
-    labels_dict = system.load_labels(args.DATANAME, mode=args.mode)
+        # Load labels and predictions
+        sentences_dict = system.load_inputs(args.DATANAME,  mode=args.mode)
+        preds_dict  = system.load_preds(args.DATANAME,  mode=args.mode)
+        labels_dict = system.load_labels(args.DATANAME, mode=args.mode)
 
-    sentences = [sentences_dict[i] for i in range(len(sentences_dict))]
-    preds = [preds_dict[i] for i in range(len(preds_dict))]
-    labels = [labels_dict[i] for i in range(len(labels_dict))]
+        sentences = [sentences_dict[i] for i in range(len(sentences_dict))]
+        preds = [preds_dict[i] for i in range(len(preds_dict))]
+        labels = [labels_dict[i] for i in range(len(labels_dict))]
 
-    cum = True
-    if args.cum == 'no':
-        cum = False
+        cum = True
+        if args.cum == 'no':
+            cum = False
 
-    # Get retention curves
-    RG_pred = RetentionGenerator(sentences, preds)
-    RG_label = RetentionGenerator(sentences, labels)
+        # Get retention curves
+        RG_pred = RetentionGenerator(sentences, preds)
+        RG_label = RetentionGenerator(sentences, labels)
 
-    feats_pred = RG_pred.get_feat(args.FEAT)
-    fracs, pos_class_fracs_pred = RG_pred.retention_plot(feats_pred, cum)
-    feats_label = RG_label.get_feat(args.FEAT)
-    _, pos_class_fracs_label = RG_label.retention_plot(feats_label, cum)
-    _, pos_class_fracs_ideal = RG_label.retention_plot(labels, cum)
+        feats_pred = RG_pred.get_feat(args.FEAT)
+        fracs, pos_class_fracs_pred = RG_pred.retention_plot(feats_pred, cum)
+        feats_label = RG_label.get_feat(args.FEAT)
+        _, pos_class_fracs_label = RG_label.retention_plot(feats_label, cum)
+        _, pos_class_fracs_ideal = RG_label.retention_plot(labels, cum)
 
 
-    # Plot
-    plt.plot(fracs, pos_class_fracs_pred[args.class_ind], label=f'pred')
+        # Plot
+        plt.plot(fracs, pos_class_fracs_pred[args.class_ind], label=f'{mdl_name}')
+
     plt.plot(fracs, pos_class_fracs_label[args.class_ind], label=f'label')
     plt.plot(fracs, fracs, label=f'random', linestyle='dashed')
     plt.plot(fracs, pos_class_fracs_ideal[args.class_ind], label=f'ideal', linestyle='dashed')
@@ -70,11 +91,11 @@ if __name__ == '__main__':
     plt.legend()
 
     # Save
-    model_name = args.MODEL_PATH
-    model_name = model_name.split('/')
-    model_name = model_name[-2:]
-    model_name = '-'.join(model_name)
-    out_file = f'{args.OUT}/data_{args.DATANAME}_feature_{args.FEAT}_mode_{args.mode}_model_{model_name}.png'
+    # model_name = args.MODEL_PATH
+    # model_name = model_name.split('/')
+    # model_name = model_name[-2:]
+    # model_name = '-'.join(model_name)
+    out_file = f'{args.out}/data_{args.dataname}_feature_{args.feat}_mode_{args.mode}.png'
     plt.savefig(out_file, bbox_inches='tight')
         
 
