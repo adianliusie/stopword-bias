@@ -49,6 +49,9 @@ class RetentionGenerator(FeatureExtractor):
     def retention_plot(self, features, cum=True, print_feat=False):
 
         fracs = [(i+1)/len(features) for i,_ in enumerate(features)]
+        if print_feat:
+            print(features)
+            print(sum(self.ys), sum(self.ys[:12500]))
 
         items = [(f, y) for f,y in zip(features, self.ys)]
         ordered_items = sorted(items, key=lambda x: x[0])
