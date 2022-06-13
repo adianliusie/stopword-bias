@@ -1,4 +1,6 @@
 from collections import defaultdict
+
+from sklearn.utils import shuffle
 from utilities.perplexity import perplexity_all
 from utilities.unigram import unigram_all
 
@@ -49,9 +51,10 @@ class RetentionGenerator(FeatureExtractor):
     def retention_plot(self, features, cum=True, print_feat=False):
 
         fracs = [(i+1)/len(features) for i,_ in enumerate(features)]
-        # if print_feat:
-        #     print(features[:100])
-        #     print(sum(self.ys), sum(self.ys[:12500]))
+        if print_feat:
+            self.ys = shuffle(self.ys)
+            # print(features[:100])
+            # print(sum(self.ys), sum(self.ys[:12500]))
 
         items = [(f, y) for f,y in zip(features, self.ys)]
         ordered_items = sorted(items, key=lambda x: x[0])
