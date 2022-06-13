@@ -51,8 +51,7 @@ class RetentionGenerator(FeatureExtractor):
     
     def retention_plot(self, features, cum=True, print_feat=False):
 
-        pred_labs = [0 if p<0 else 1 for p in features]
-        print('Accuracy', accuracy_score(pred_labs, self.ys))
+
         fracs = [(i+1)/len(features) for i,_ in enumerate(features)]
         if print_feat:
             pass
@@ -63,6 +62,8 @@ class RetentionGenerator(FeatureExtractor):
         items = [(f, y) for f,y in zip(features, self.ys)]
         ordered_items = sorted(items, key=lambda x: x[0])
         ordered_ys = [o[1] for o in ordered_items]
+        pred_labs = [0 if p<0 else 1 for p in [o[0] for o in ordered_items]]
+        print('Accuracy', accuracy_score(pred_labs, ordered_ys))
         if print_feat:
             # print([o[0] for i,o in enumerate(ordered_items) if i == int(len(ordered_items)/2)])
             print([o for o in items[:10]])
