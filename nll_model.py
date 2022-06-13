@@ -4,7 +4,7 @@ import numpy as np
 import re
 
 class NllModel:
-    def __init__(self, data_name="imdb", dist_type='stop'):
+    def __init__(self, data_name="imdb", dist_type='stop', thresh=0):
 
         train, dev, test = load_data(data_name)
         self.train = train
@@ -16,7 +16,7 @@ class NllModel:
         self.words = stp_words
         self.pos_dist = pos_dist
         self.neg_dist = neg_dist
-        self.thresh = 0
+        self.thresh = thresh
 
     def load_preds(self, sentences):
         
