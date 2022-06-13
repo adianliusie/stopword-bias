@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from framework.src.system_loader import EnsembleLoader
 from feature_extractor import RetentionGenerator
 from nll_model import NllModel
+from sklearn.metrics import accuracy_score
 
 
 
@@ -64,6 +65,8 @@ if __name__ == '__main__':
         if mdl_name == 'stopgram':
             stp = NllModel()
             preds = stp.load_preds(sentences)
+            pred_labs = [0 if p<1 else 1 for p in preds]
+            print('Accuracy', accuracy_score(pred_labs, labels))
         else:
             preds_dict  = system.load_preds(args.dataname,  mode=args.mode)
             preds = [preds_dict[i] for i in range(len(preds_dict))]
@@ -79,7 +82,7 @@ if __name__ == '__main__':
         feats_pred = RG_pred.get_feat(args.feat)
         fracs, pos_class_fracs_pred = RG_pred.retention_plot(feats_pred, cum)
         feats_label = RG_label.get_feat(args.feat)
-        _, pos_class_fracs_label = RG_label.retention_plot(feats_label, cum, print_feat=True)
+        _, pos_class_fracs_label = RG_label.retention_plot(feats_label, cum)
         _, pos_class_fracs_ideal = RG_label.retention_plot(labels, cum)
 
 
