@@ -55,7 +55,7 @@ class RetentionGenerator(FeatureExtractor):
         ordered_ys = [o[1] for o in ordered_items]
         if print_feat:
             print([o[0] for i,o in enumerate(ordered_items) if i == int(len(ordered_items)/2)])
-            print(ordered_ys)
+            print(ordered_ys[:100])
         
 
 
@@ -71,6 +71,9 @@ class RetentionGenerator(FeatureExtractor):
                 else:
                     cum_count[c].append(cum_count[c][-1])
                 pos_class_fracs[c].append(cum_count[c][-1]/(i+1))
+
+        # temp
+        print(cum_count[1][:100])
 
         if cum:
             cum_count_fracs = {}
