@@ -1,6 +1,7 @@
 from framework.src.utils.data_utils import load_data
 from utilities.unigram import get_distributions
 import numpy as np
+import re
 
 class NllModel:
     def __init__(self, data_name="imdb", dist_type='stop'):
@@ -18,9 +19,10 @@ class NllModel:
         self.thresh = 0
 
     def load_preds(self, sentences):
-        # Assume evaluation on the test split for now
+        
         all_preds = []
         for sentence in sentences:
+            sentence = re.sub(r'[^\w\s\']',' ', sentence).lower()
             pos_likelihood = 0
             neg_likelihood = 0
             for w in sentence.split():

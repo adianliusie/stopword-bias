@@ -8,6 +8,7 @@ import sys
 import matplotlib.pyplot as plt
 from framework.src.system_loader import EnsembleLoader
 from feature_extractor import RetentionGenerator
+from nll_model import NllModel
 
 
 
@@ -19,7 +20,7 @@ if __name__ == '__main__':
                         help='dataset e.g. imdb.',
                         required=True)
     parser.add_argument('--model_paths',
-                        help='Path to the model files.', nargs='+',
+                        help='Path to the model files, arbitrary path for stopgram.', nargs='+',
                         required=True)
     parser.add_argument('--model_names',
                         help='names for models in legend.', nargs='+',
@@ -55,13 +56,18 @@ if __name__ == '__main__':
 
         # Load labels and predictions
         sentences_dict = system.load_inputs(args.DATANAME,  mode=args.mode)
-        preds_dict  = system.load_preds(args.DATANAME,  mode=args.mode)
-        labels_dict = system.load_labels(args.DATANAME, mode=args.mode)
-
         sentences = [sentences_dict[i] for i in range(len(sentences_dict))]
-        preds = [preds_dict[i] for i in range(len(preds_dict))]
+
+        labels_dict = system.load_labels(args.DATANAME, mode=args.mode)
         labels = [labels_dict[i] for i in range(len(labels_dict))]
 
+        if mdl_name == 'stopgram':
+            stp = NllModel()
+            preds = stp.load_preds(sentences)
+        else:
+            preds_dict  = system.load_preds(args.DATANAME,  mode=args.mode)
+            preds = [preds_dict[i] for i in range(len(preds_dict))]
+        
         cum = True
         if args.cum == 'no':
             cum = False
