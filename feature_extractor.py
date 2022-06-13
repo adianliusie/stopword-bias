@@ -46,12 +46,14 @@ class RetentionGenerator(FeatureExtractor):
         super().__init__(sentences)
         self.ys = ys
     
-    def retention_plot(self, features, cum=True):
+    def retention_plot(self, features, cum=True, print_feat=False):
 
         fracs = [(i+1)/len(features) for i,_ in enumerate(features)]
 
         items = [(f, y) for f,y in zip(features, self.ys)]
         ordered_items = sorted(items, key=lambda x: x[0])
+        if print_feat:
+            print([o[0] for o in ordered_items])
         ordered_ys = [o[1] for o in ordered_items]
 
         # retention plot per class
