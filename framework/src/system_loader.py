@@ -8,45 +8,6 @@ from .trainer import Trainer
 from .utils.torch_utils import no_grad
 from .utils.data_utils import load_data
 from .helpers import DirHelper
-
-class EnsembleLoader(SystemLoader):
-    def __init__(self, exp_path:str):
-        self.exp_path = exp_path
-        self.paths  = [f'{exp_path}/{seed}' for seed in os.listdir(exp_path)]
-        self.seeds  = [SystemLoader(seed_path) for seed_path in self.paths]
-    
-    def load_probs(self, data_name, mode)->dict:
-        seed_probs = [seed.load_probs(data_name, mode) for seed in self.seeds]
-
-        conv_ids = seed_probs[0].keys()
-        assert all([i.keys() == conv_ids for i in seed_probs])
-
-        ensemble = {}
-        for conv_id in conv_ids:
-            probs = [seed[conv_id] for seed in seed_probs]
-            probs = np.mean(probs, axis=0)
-            ensemble[conv_id] = probs
-        return ensemble    
-
-    def load_formatted_probs(self, formatting, data_name, mode)->dict:
-        seed_probs = [seed.load_formatted_probs(formatting, data_name, mode) for seed in self.seeds]
-        
-        conv_ids = seed_probs[0].keys()
-        assert all([i.keys() == conv_ids for i in seed_probs])
-
-        ensemble = {}
-        for conv_id in conv_ids:
-            probs = [seed[conv_id] for seed in seed_probs]
-            probs = np.mean(probs, axis=0)
-            ensemble[conv_id] = probs
-        return ensemble    
-    
-    def load_formatted_preds(self, formatting, data_name, mode):
-        probs = self.load_formatted_probs(formatting, data_name, mode)
-        preds = {}
-        for k, probs in probs.items():
-            preds[k] = int(np.argmax(probs, axis=-1))
-        return preds
         
 class SystemLoader(Trainer):
     """Base loader class- the inherited class inherits
@@ -157,3 +118,42 @@ class SystemLoader(Trainer):
         for k, ex in enumerate(eval_data):
             inputs_dict[k] = ex['text']
         return inputs_dict
+
+class EnsembleLoader(SystemLoader):
+    def __init__(self, exp_path:str):
+        self.exp_path = exp_path
+        self.paths  = [f'{exp_path}/{seed}' for seed in os.listdir(exp_path)]
+        self.seeds  = [SystemLoader(seed_path) for seed_path in self.paths]
+    
+    def load_probs(self, data_name, mode)->dict:
+        seed_probs = [seed.load_probs(data_name, mode) for seed in self.seeds]
+
+        conv_ids = seed_probs[0].keys()
+        assert all([i.keys() == conv_ids for i in seed_probs])
+
+        ensemble = {}
+        for conv_id in conv_ids:
+            probs = [seed[conv_id] for seed in seed_probs]
+            probs = np.mean(probs, axis=0)
+            ensemble[conv_id] = probs
+        return ensemble    
+
+    def load_formatted_probs(self, formatting, data_name, mode)->dict:
+        seed_probs = [seed.load_formatted_probs(formatting, data_name, mode) for seed in self.seeds]
+        
+        conv_ids = seed_probs[0].keys()
+        assert all([i.keys() == conv_ids for i in seed_probs])
+
+        ensemble = {}
+        for conv_id in conv_ids:
+            probs = [seed[conv_id] for seed in seed_probs]
+            probs = np.mean(probs, axis=0)
+            ensemble[conv_id] = probs
+        return ensemble    
+    
+    def load_formatted_preds(self, formatting, data_name, mode):
+        probs = self.load_formatted_probs(formatting, data_name, mode)
+        preds = {}
+        for k, probs in probs.items():
+            preds[k] = int(np.argmax(probs, axis=-1))
+        return preds
