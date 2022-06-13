@@ -55,17 +55,17 @@ if __name__ == '__main__':
         system = EnsembleLoader(pth)
 
         # Load labels and predictions
-        sentences_dict = system.load_inputs(args.DATANAME,  mode=args.mode)
+        sentences_dict = system.load_inputs(args.dataname,  mode=args.mode)
         sentences = [sentences_dict[i] for i in range(len(sentences_dict))]
 
-        labels_dict = system.load_labels(args.DATANAME, mode=args.mode)
+        labels_dict = system.load_labels(args.dataname, mode=args.mode)
         labels = [labels_dict[i] for i in range(len(labels_dict))]
 
         if mdl_name == 'stopgram':
             stp = NllModel()
             preds = stp.load_preds(sentences)
         else:
-            preds_dict  = system.load_preds(args.DATANAME,  mode=args.mode)
+            preds_dict  = system.load_preds(args.dataname,  mode=args.mode)
             preds = [preds_dict[i] for i in range(len(preds_dict))]
         
         cum = True
@@ -76,9 +76,9 @@ if __name__ == '__main__':
         RG_pred = RetentionGenerator(sentences, preds)
         RG_label = RetentionGenerator(sentences, labels)
 
-        feats_pred = RG_pred.get_feat(args.FEAT)
+        feats_pred = RG_pred.get_feat(args.feat)
         fracs, pos_class_fracs_pred = RG_pred.retention_plot(feats_pred, cum)
-        feats_label = RG_label.get_feat(args.FEAT)
+        feats_label = RG_label.get_feat(args.feat)
         _, pos_class_fracs_label = RG_label.retention_plot(feats_label, cum)
         _, pos_class_fracs_ideal = RG_label.retention_plot(labels, cum)
 
