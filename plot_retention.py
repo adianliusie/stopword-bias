@@ -79,7 +79,7 @@ if __name__ == '__main__':
         feats_pred = RG_pred.get_feat(args.feat)
         fracs, pos_class_fracs_pred = RG_pred.retention_plot(feats_pred, cum)
         feats_label = RG_label.get_feat(args.feat)
-        _, pos_class_fracs_label = RG_label.retention_plot(feats_label, cum)
+        _, pos_class_fracs_label = RG_label.retention_plot(feats_label, cum, print_feat=True)
         _, pos_class_fracs_ideal = RG_label.retention_plot(labels, cum)
 
 
