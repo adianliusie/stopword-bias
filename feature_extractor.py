@@ -56,7 +56,7 @@ class RetentionGenerator(FeatureExtractor):
         ordering = np.argsort(np.asarray(features))
         ordered_ys = np.asarray(self.ys)[ordering]
         # ordered_ys = [x for _,x in sorted(zip(features, self.ys))]
-        pred_labs = [0 if p<0 else 1 for p in sorted(features)]
+        pred_labs = [0 if p<0 else 1 for p in features[ordering]]
         print('Accuracy', accuracy_score(pred_labs, ordered_ys))
 
         # retention plot per class
