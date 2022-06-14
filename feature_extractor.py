@@ -54,7 +54,7 @@ class RetentionGenerator(FeatureExtractor):
 
         fracs = [(i+1)/len(features) for i,_ in enumerate(features)]
         ordering = np.argsort(np.asarray(features))
-        ordered_ys = np.asarray(self.ys[ordering])
+        ordered_ys = np.asarray(self.ys)[ordering]
         # ordered_ys = [x for _,x in sorted(zip(features, self.ys))]
         pred_labs = [0 if p<0 else 1 for p in sorted(features)]
         print('Accuracy', accuracy_score(pred_labs, ordered_ys))
