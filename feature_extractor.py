@@ -6,6 +6,7 @@ from utilities.unigram import unigram_all
 
 from framework.src.utils.data_utils import load_data
 from sklearn.metrics import accuracy_score
+import numpy as np
 
 class FeatureExtractor():
     '''
@@ -52,7 +53,9 @@ class RetentionGenerator(FeatureExtractor):
     def retention_plot(self, features, cum=True, print_feat=False):
 
         fracs = [(i+1)/len(features) for i,_ in enumerate(features)]
-        ordered_ys = [x for _,x in sorted(zip(features, self.ys))]
+        ordering = np.argsort(np.asarray(features))
+        ordered_ys = np.asarray(self.ys[ordering])
+        # ordered_ys = [x for _,x in sorted(zip(features, self.ys))]
         pred_labs = [0 if p<0 else 1 for p in sorted(features)]
         print('Accuracy', accuracy_score(pred_labs, ordered_ys))
 
