@@ -90,7 +90,8 @@ if __name__ == '__main__':
     plt.plot(fracs, fracs, label=f'no bias', linestyle='dashed')
     plt.plot(fracs, pos_class_fracs_ideal[args.class_ind], label=f'full bias', linestyle='dashed')
     if cum:
-        plt.ylabel(f'Cumulative Class {args.class_ind} Fraction')
+        # plt.ylabel(f'Cumulative Class {args.class_ind} Fraction')
+        plt.ylabel(f'Total Positive Class Fraction')
     else:
         plt.ylabel(f'Class Fraction')
     plt.xlabel(f'Retention Fraction')
