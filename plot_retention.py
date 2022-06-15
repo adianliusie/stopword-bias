@@ -87,8 +87,8 @@ if __name__ == '__main__':
         plt.plot(fracs, pos_class_fracs_pred[args.class_ind], label=f'{mdl_name}')
 
     plt.plot(fracs, pos_class_fracs_label[args.class_ind], label=f'label')
-    plt.plot(fracs, fracs, label=f'random', linestyle='dashed')
-    plt.plot(fracs, pos_class_fracs_ideal[args.class_ind], label=f'ideal', linestyle='dashed')
+    plt.plot(fracs, fracs, label=f'no bias', linestyle='dashed')
+    plt.plot(fracs, pos_class_fracs_ideal[args.class_ind], label=f'full bias', linestyle='dashed')
     if cum:
         plt.ylabel(f'Cumulative Class {args.class_ind} Fraction')
     else:
