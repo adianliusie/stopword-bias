@@ -57,7 +57,7 @@ def _load_sst(lim:int=None)->List[Dict['text', 'label']]:
     test  = [_invert_labels(ex) for ex in test]
     return train, dev, test
 
-def _load_twitter(lim:int=None)->List[Dict['text', 'label']]:
+def _load_twitter(lim:int=None, balance=True)->List[Dict['text', 'label']]:
     base_path = '/home/alta/BLTSpeaking/exp-vr313/Emotion/data/'
     CLASS_TO_IND = {
         'love': 1,
@@ -70,6 +70,13 @@ def _load_twitter(lim:int=None)->List[Dict['text', 'label']]:
     train = _read_file(f'{base_path}train.txt', CLASS_TO_IND)
     dev = _read_file(f'{base_path}val.txt', CLASS_TO_IND)
     test = _read_file(f'{base_path}test.txt', CLASS_TO_IND)
+    if balance:
+        "balance test set"
+        random.seed(100)
+        pos_samples = [t for t in test if t['label']==1]
+        neg_samples = [t for t in test if t['label']==0]
+        neg_samples = random.sample(neg_samples, len(pos_samples))
+        test = pos_samples + neg_samples
     return train, dev, test
 
 def _read_file(filepath, CLASS_TO_IND):
