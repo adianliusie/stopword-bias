@@ -89,6 +89,10 @@ def _load_cola(lim:int=None)->List[Dict['text', 'label']]:
     train = [_key_to_text(ex, old_key='sentence') for ex in train]
     dev   = [_key_to_text(ex, old_key='sentence') for ex in dev]
     test  = [_key_to_text(ex, old_key='sentence') for ex in test]
+
+    train = [_map_labels(ex) for ex in train]
+    dev = [_map_labels(ex) for ex in dev]
+    test = [_map_labels(ex) for ex in test]
     return train, dev, test
 
 def _read_file(filepath, CLASS_TO_IND):
@@ -125,4 +129,9 @@ def _key_to_text(ex:dict, old_key='content'):
 def _invert_labels(ex:dict):
     ex = ex.copy()
     ex['label'] = 1 - ex['label']
+    return ex
+
+def _map_labels(ex:dict, map_dict={-1:0, 1:1}):
+    ex = ex.copy()
+    ex['label'] = map_dict[ex['label']]
     return ex
