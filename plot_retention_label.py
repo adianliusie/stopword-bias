@@ -54,7 +54,7 @@ if __name__ == '__main__':
 
         RG = RetentionGenerator(sentences, labels)
 
-        feats_label = RG.get_feat(args.feat)
+        feats_label = RG.get_feat(args.feat, data_name=dataname)
         fracs, pos_class_fracs_label = RG.retention_plot(feats_label, cum)
         _, pos_class_fracs_ideal = RG.retention_plot(labels, cum)
 
