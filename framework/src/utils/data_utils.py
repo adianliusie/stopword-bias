@@ -92,7 +92,7 @@ def _load_cola(lim:int=None)->List[Dict['text', 'label']]:
     return train, dev, dev
 
 def _load_boolq(lim:int=None)->List[Dict['text', 'label']]:
-    dataset = load_dataset("superglue", "boolq")
+    dataset = load_dataset("super_glue", "boolq")
     train = list(dataset['train'])[:lim]
     dev   = list(dataset['validation'])[:lim]
 
