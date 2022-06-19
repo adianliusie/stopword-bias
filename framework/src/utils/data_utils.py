@@ -88,12 +88,8 @@ def _load_cola(lim:int=None)->List[Dict['text', 'label']]:
 
     train = [_key_to_text(ex, old_key='sentence') for ex in train]
     dev   = [_key_to_text(ex, old_key='sentence') for ex in dev]
-    test  = [_key_to_text(ex, old_key='sentence') for ex in test]
 
-    train = [_map_labels(ex) for ex in train]
-    dev = [_map_labels(ex) for ex in dev]
-    test = [_map_labels(ex) for ex in test]
-    return train, dev, test
+    return train, dev, dev
 
 def _read_file(filepath, CLASS_TO_IND):
     with open(filepath, 'r') as f:
