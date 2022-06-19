@@ -107,8 +107,8 @@ def _load_rte(lim:int=None)->List[Dict['text', 'label']]:
     train = list(dataset['train'])[:lim]
     dev   = list(dataset['validation'])[:lim]
 
-    train = [_key_to_text(ex, old_key='hypothesis') for ex in train]
-    dev = [_key_to_text(ex, old_key='hypothesis') for ex in dev]
+    train = [_key_to_text(ex, old_key='premise') for ex in train]
+    dev = [_key_to_text(ex, old_key='premise') for ex in dev]
 
     return train, dev, dev
 
