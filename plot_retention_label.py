@@ -14,7 +14,7 @@ if __name__ == '__main__':
     # Get command line arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('--datanames',
-                        help='dataset e.g. imdb twitter.',
+                        help='dataset e.g. imdb twitter.', nargs='+'
                         required=True)
     parser.add_argument('--feat',
                         help='e.g. unigram.',
