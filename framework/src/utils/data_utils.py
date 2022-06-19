@@ -14,6 +14,7 @@ def load_data(data_name:str, lim:int=None)->Tuple['train', 'dev', 'test']:
     if data_name == 'yelp':    return _load_yelp(lim)
     if data_name == 'cola':    return _load_cola(lim)
     if data_name == 'boolq':   return _load_boolq(lim)
+    if data_name == 'rte':     return _load_rte(lim)
     else: raise ValueError('invalid dataset provided')
 
 def _load_imdb(lim:int=None)->List[Dict['text', 'label']]:
@@ -98,6 +99,16 @@ def _load_boolq(lim:int=None)->List[Dict['text', 'label']]:
 
     train = [_key_to_text(ex, old_key='question') for ex in train]
     dev = [_key_to_text(ex, old_key='question') for ex in dev]
+
+    return train, dev, dev
+
+def _load_rte(lim:int=None)->List[Dict['text', 'label']]:
+    dataset = load_dataset("super_glue", "rte")
+    train = list(dataset['train'])[:lim]
+    dev   = list(dataset['validation'])[:lim]
+
+    train = [_key_to_text(ex, old_key='hypothesis') for ex in train]
+    dev = [_key_to_text(ex, old_key='hypothesis') for ex in dev]
 
     return train, dev, dev
 
