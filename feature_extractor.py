@@ -15,7 +15,7 @@ class FeatureExtractor():
     def __init__(self, sentences):
         self.sentences = sentences
     
-    def get_feat(self, feat_name='num_words'):
+    def get_feat(self, feat_name='num_words', data_name='imdb'):
         if feat_name == 'num_words':
             return self.num_words()
         if feat_name == 'num_chars':
@@ -23,7 +23,7 @@ class FeatureExtractor():
         if feat_name == 'perplexity':
             return self.perplexity()
         if feat_name == 'unigram':
-            return self.unigram()
+            return self.unigram(data_name)
 
     def num_words(self):
         return [len(s.split()) for s in self.sentences]
@@ -35,7 +35,7 @@ class FeatureExtractor():
         return perplexity_all(self.sentences)
 
     def unigram(self, train_data_name='imdb'):
-        train, dev, test = load_data(train_data_name)
+        train, _, _ = load_data(train_data_name)
         return unigram_all(self.sentences, train)
 
 
