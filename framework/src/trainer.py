@@ -12,7 +12,9 @@ from typing import List, Tuple
 
 from .helpers import DataLoader, DirHelper, Batcher
 from .utils.torch_utils import no_grad
-from .model import TransformerModel
+from .model import TransformerModel, GloveAvgModel, GloveBilstmModel
+
+from .helpers.bias_classes import BiasBatcher, BiasDataLoader, LearnedMixin
 
 class Trainer():
     """"base class for running basic transformer classification models"""
@@ -28,9 +30,16 @@ class Trainer():
         self.model_args = m_args
         self.data_loader = DataLoader(m_args.transformer, formatting=m_args.formatting)
         self.batcher = Batcher(max_len=m_args.max_len)
-        self.model = TransformerModel(trans_name=m_args.transformer)
+        
+        if m_args.transformer == 'glove_avg':
+            self.model = GloveAvgModel(trans_name=m_args.transformer)
+        elif m_args.transformer == 'glove_bilstm':
+            self.model = GloveBilstmModel(trans_name=m_args.transformer)
+        else:
+            self.model = TransformerModel(trans_name=m_args.transformer)
+            
         self.device = m_args.device
-
+                 
     def train(self, t_args:namedtuple):
         self.dir.save_args('train_args.json', t_args)
         if t_args.wandb: self.set_up_wandb(t_args)
@@ -81,19 +90,47 @@ class Trainer():
         print(f'best dev epoch: {best_epoch}')
 
     def model_output(self, batch):
-        y = self.model(input_ids=batch.ids, 
-                       attention_mask=batch.mask)
+        if getattr(self, 'bias', False):
+            return self.bias_model_output(batch)
+             
+        output = self.model(input_ids=batch.ids, 
+                            attention_mask=batch.mask)
                 
-        loss = F.cross_entropy(y, batch.labels)
+        loss = F.cross_entropy(output.y, batch.labels)
             
         # return accuracy metrics
-        hits = torch.argmax(y, dim=-1) == batch.labels
+        hits = torch.argmax(output.y, dim=-1) == batch.labels
         hits = torch.sum(hits[batch.labels != -100]).item()
         num_preds = torch.sum(batch.labels != -100).item()
                 
-        return SimpleNamespace(loss=loss, y=y,
+        return SimpleNamespace(loss=loss, y=output.y,
                                hits=hits, num_preds=num_preds)
     
+    ############# EXPERIMENTAL BIAS METHODS #######################
+    def bias_train(self, t_args:namedtuple, bias_model_path):
+        self.data_loader = BiasDataLoader(trans_name=self.model_args.transformer, 
+                                          formatting=self.model_args.formatting, 
+                                          bias_model=bias_model_path)
+        self.batcher = BiasBatcher(max_len=self.model_args.max_len)
+        self.bias = True
+        self.loss_fn = LearnedMixin()
+        self.loss_fn.to(self.device)
+        self.train(t_args)
+    
+    def bias_model_output(self, batch):
+        output = self.model(input_ids=batch.ids, 
+                            attention_mask=batch.mask)
+        
+        loss_output = self.loss_fn(hidden=output.h, logits=output.y, 
+                                   bias=batch.bias_preds, labels=batch.labels)
+        
+        # return accuracy metrics
+        hits = torch.argmax(output.y, dim=-1) == batch.labels
+        hits = torch.sum(hits[batch.labels != -100]).item()
+        num_preds = torch.sum(batch.labels != -100).item()
+              
+        return SimpleNamespace(loss=loss_output.loss, y=output.y,
+                               hits=hits, num_preds=num_preds)
     
     ############# EVAL METHODS ####################################
     @no_grad

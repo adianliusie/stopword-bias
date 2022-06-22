@@ -6,7 +6,7 @@ import argparse
 import os
 import sys
 import matplotlib.pyplot as plt
-from framework.src.system_loader import EnsembleLoader
+from framework.src.system_loader import EnsembleLoader, SystemLoader
 from feature_extractor import RetentionGenerator
 from nll_model import NllModel
 
@@ -53,7 +53,8 @@ if __name__ == '__main__':
     systems = []
     for pth, mdl_name in zip(args.model_paths, args.model_names):
         system = EnsembleLoader(pth)
-
+        #system = SystemLoader(pth)
+        
         # Load labels and predictions
         sentences_dict = system.load_inputs(args.dataname,  mode=args.mode)
         sentences = [sentences_dict[i] for i in range(len(sentences_dict))]

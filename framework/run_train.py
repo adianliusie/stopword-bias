@@ -17,7 +17,7 @@ model_parser.add_argument('--formatting',   default=None,       type=str,  help=
 model_parser.add_argument('--max_len',      default=512,        type=int,  help='max length of transformer inputs')
 model_parser.add_argument('--device',       default='cuda',     type=str,  help='device to use [cuda, cpu]')
 
-model_parser.add_argument('--num_seeds',  default=1,           type=int,  help='number of seeds to train')
+model_parser.add_argument('--num_seeds',  default=5,           type=int,  help='number of seeds to train')
 model_parser.add_argument('--force',      action='store_true',  help='if set, will overwrite any existing directory')
 
 #### ArgParse for Training details
@@ -27,7 +27,7 @@ train_parser.add_argument('--data_set',  default='imdb',  type=str,  help='')
 train_parser.add_argument('--lim',       default=None,    type=int, help='size of data subset to use (for debugging)')
 train_parser.add_argument('--print_len', default=100,     type=int,  help='logging training print size')
 
-train_parser.add_argument('--epochs',  default=4,     type=int,     help='numer of epochs to train')
+train_parser.add_argument('--epochs',  default=6,     type=int,     help='numer of epochs to train')
 train_parser.add_argument('--lr',      default=1e-5,  type=float,   help='training learning rate')
 train_parser.add_argument('--bsz',     default=8,     type=int,     help='training batch size')
 
