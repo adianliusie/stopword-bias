@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from torch.nn.utils.rnn import pack_padded_sequence
+from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 from types import SimpleNamespace
 
 from .utils.torch_utils import load_transformer, load_transformer
@@ -34,7 +34,7 @@ class GloveAvgModel(torch.nn.Module):
         glove_embeds = self.embeddings(input_ids)
         avg_embeds = torch.sum(glove_embeds*attention_mask, dim=1)/torch.sum(attention_mask, dim=1)
         y = self.output_head(avg_embeds)    #[bsz, C] 
-        return SimpleNamespace(h=h, y=y)
+        return SimpleNamespace(h=avg_embeds, y=y)
 
 class GloveBilstmModel(torch.nn.Module):
     """ glove word sverage model """
@@ -46,13 +46,15 @@ class GloveBilstmModel(torch.nn.Module):
         self.output_head = nn.Linear(300, num_classes)
         
     def forward(self, input_ids, attention_mask):
-        attention_mask = attention_mask.unsqueeze(-1)
         glove_embeds = self.embeddings(input_ids)
-        embeds = pack_padded_sequence(input_ids, attention_mask)
-        H = self.bilstm(embeds)
-        h = torch.mean(H, dim=0)
-        y = self.output_head(h)    #[bsz, C] 
-        return SimpleNamespace(h=h, y=y)
+        seq_lens = torch.sum(attention_mask, dim=-1).tolist()
+        embeds = pack_padded_sequence(glove_embeds, seq_lens, batch_first=True, enforce_sorted=False)
+        H, _ = self.bilstm(embeds)
+        H , _ = pad_packed_sequence(H, batch_first=True)
+        attention_mask = attention_mask.unsqueeze(-1)
+        avg_embeds = torch.sum(H*attention_mask, dim=1)/torch.sum(attention_mask, dim=1)
+        y = self.output_head(avg_embeds)    #[bsz, C] 
+        return SimpleNamespace(h=avg_embeds, y=y)
 
 """
 class GloveGruModel(nn.Module):

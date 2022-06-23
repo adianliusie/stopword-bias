@@ -42,7 +42,10 @@ class DataLoader:
                     word_list = text.split().copy()
                     random.shuffle(word_list)
                     text = ' '.join(word_list)
-            
+                    if text.strip() == '':
+                        print('skipped')
+                        text = 'and the'
+                        
             elif self.formatting == 'shuffled':
                 word_list = text.split().copy()
                 random.shuffle(word_list)
