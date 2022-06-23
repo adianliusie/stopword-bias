@@ -12,18 +12,21 @@ if __name__ == '__main__':
     # Get command line arguments
     commandLineParser = argparse.ArgumentParser()
     commandLineParser.add_argument('DATANAME', type=str, help='dataset e.g. imdb')
-    commandLineParser.add_argument('MODEL_PATH', type=str, help='path to trained model')
-args = commandLineParser.parse_args()
+    # commandLineParser.add_argument('MODEL_PATH', type=str, help='path to trained model')
+    args = commandLineParser.parse_args()
 
-system = SystemLoader(args.MODEL_PATH)
-sentences_dict = system.load_inputs(args.DATANAME,  mode='test')
-labels_dict = system.load_labels(args.DATANAME, mode='test')
+    # system = SystemLoader(args.MODEL_PATH)
+    # sentences_dict = system.load_inputs(args.DATANAME,  mode='test')
+    # labels_dict = system.load_labels(args.DATANAME, mode='test')
 
-sentences = [sentences_dict[i] for i in range(len(sentences_dict))]
-labels = [labels_dict[i] for i in range(len(labels_dict))]
+    sentences_dict = SystemLoader.load_inputs(args.DATANAME,  mode='test')
+    labels_dict = SystemLoader.load_labels(args.DATANAME, mode='test')
 
-nll_system = NllModel(args.DATANAME, 'stop', thresh=0)
-preds_nll = nll_system.load_preds(sentences)
+    sentences = [sentences_dict[i] for i in range(len(sentences_dict))]
+    labels = [labels_dict[i] for i in range(len(labels_dict))]
 
-acc = accuracy_score(labels, preds_nll)
-print("Accuracy", acc)
+    nll_system = NllModel(args.DATANAME, 'stop', thresh=0)
+    preds_nll = nll_system.load_preds(sentences)
+
+    acc = accuracy_score(labels, preds_nll)
+    print("Accuracy", acc)
