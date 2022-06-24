@@ -64,6 +64,12 @@ class SystemLoader(Trainer):
             probabilties[sample_id] = y.cpu().numpy()
         return probabilties
     
+    def _get_eval_batches(self, data_name, mode='test'):
+        #get eval data- data_loader returns (train, dev, test) so index
+        eval_data = self.data_loader.get_data_split(data_name, mode)
+        eval_batches = self.batcher(data=eval_data, bsz=1, shuffle=False)
+        return eval_batches
+
     def load_formatted_preds(self, formatting, data_name, mode):
         probs = self.load_formatted_probs(formatting, data_name, mode)
         preds = {}
@@ -93,12 +99,6 @@ class SystemLoader(Trainer):
         probs = self.dir.load_probs(data_name, mode, dir_name=formatting)
         return probs
             
-    def _get_eval_batches(self, data_name, mode='test'):
-        #get eval data- data_loader returns (train, dev, test) so index
-        eval_data = self.data_loader.get_data_split(data_name, mode)
-        eval_batches = self.batcher(data=eval_data, bsz=1, shuffle=False)
-        return eval_batches
-
     @staticmethod
     def load_labels(data_name, mode='test'):
         split_index = {'train':0, 'dev':1, 'test':2}

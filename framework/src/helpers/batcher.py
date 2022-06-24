@@ -34,13 +34,10 @@ class Batcher:
             
             if len(ids) > self.max_len:            
                 ids = ids[:self.max_len-1] + [ids[-1]]
-                
             prepped_examples.append([k, ids, label])
                 
         return prepped_examples
-            
-    ### UTILITY METHODS #####################################################
-    
+                
     def to(self, device:torch.device):
         """ sets the device of the batcher """
         self.device = device
@@ -57,4 +54,3 @@ class Batcher:
         ids = torch.LongTensor(padded_ids).to(self.device)
         mask = torch.FloatTensor(mask).to(self.device)
         return ids, mask
-        

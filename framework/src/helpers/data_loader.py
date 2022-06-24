@@ -42,7 +42,10 @@ class DataLoader:
                     word_list = text.split().copy()
                     random.shuffle(word_list)
                     text = ' '.join(word_list)
-            
+                    if text.strip() == '':
+                        print('skipped')
+                        text = 'and the'
+                        
             elif self.formatting == 'shuffled':
                 word_list = text.split().copy()
                 random.shuffle(word_list)
@@ -64,47 +67,18 @@ class DataLoader:
         return new_text
                                                                           
     def get_data(self, data_name:str, lim:int=None):
-        if self._in_cache(data_name):
-            train, dev, test = self._load_proc_data(data_name)
-            train, dev, test = train[:lim], dev[:lim], test[:lim]
-        else:
-            train, dev, test = load_data(data_name, lim)
-            train, dev, test = [self.prep_split(split) for split in (train, dev, test)]
-            self._save_proc_data(data_name, train, dev, test)
+        train, dev, test = load_data(data_name, lim)
+        train, dev, test = [self.prep_split(split) for split in (train, dev, test)]
         return train, dev, test
     
     def get_data_split(self, data_name:str, split:str, lim:int=None):
         split_index = {'train':0, 'dev':1, 'test':2}
-        data = self.get_data(data_name, lim)[split_index[split]]
+        data = load_data(data_name)[split_index[split]]
+        data = self.prep_split(data)
         return data
     
     def __call__(self, *args, **kwargs):
         return self.get_data(*args, **kwargs)
-    
-    def _in_cache(self, data_name:str)->bool:
-        pickle_paths = [self._get_pickle_path(data_name, i, self.formatting) \
-                                        for i in ['train', 'dev', 'test']]
-        return all([os.path.isfile(path) for path in pickle_paths])
-
-    def _save_proc_data(self, data_name:str, train:list, dev:list, test:list):
-        split_names = ['train', 'dev', 'test']
-        for k, data in enumerate([train, dev, test]):
-            split_name = split_names[k]
-            pickle_name = self._get_pickle_path(data_name, split_name, self.formatting)
-            with open(pickle_name, 'wb') as handle:
-                pickle.dump(data, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-    def _load_proc_data(self, data_name)->('train', 'dev', 'test'):
-        splits = []
-        for split_name in ['train', 'dev', 'test']:
-            pickle_name = self._get_pickle_path(data_name, split_name, self.formatting)
-            with open(pickle_name, 'rb') as handle:
-                data = pickle.load(handle)
-                splits.append(data)
-        return splits
-    
-    def _get_pickle_path(self, data_name, split_name, formatting):
-        return f'data_cache/{data_name}.{split_name}.{self.formatting}.pkl'
     
     @property
     def stop_word_list(self):
