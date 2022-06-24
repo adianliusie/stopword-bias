@@ -34,7 +34,11 @@ if __name__ == '__main__':
     parser.add_argument('--class_ind',
                         type=int,
                         help='target class',
-                        default='1')   
+                        default='1')
+    parser.add_argument('--unigram_train_data_name',
+                        type=str,
+                        help='training data to calculate unigram function',
+                        default='imdb') 
     parser.add_argument('--mode',
                         help='mode of data',
                         default='test')
@@ -76,9 +80,9 @@ if __name__ == '__main__':
         RG_pred = RetentionGenerator(sentences, preds)
         RG_label = RetentionGenerator(sentences, labels)
 
-        feats_pred = RG_pred.get_feat(args.feat)
+        feats_pred = RG_pred.get_feat(args.feat, data_name=args.unigram_train_data_name)
         fracs, pos_class_fracs_pred = RG_pred.retention_plot(feats_pred, cum)
-        feats_label = RG_label.get_feat(args.feat)
+        feats_label = RG_label.get_feat(args.feat, data_name=args.unigram_train_data_name)
         _, pos_class_fracs_label = RG_label.retention_plot(feats_label, cum)
         _, pos_class_fracs_ideal = RG_label.retention_plot(labels, cum)
 
